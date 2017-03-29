@@ -272,7 +272,102 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
     aplpy_channel: channel map plotting function
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    There will be a proper docstring (like for aplpy_plot) in the future ;-)
+    Plot a grid of channel maps, i.e. a regular grid of plots displaying every 
+    n-th channel of a three dimensional fits cube.
+    Axis labels are plotted on the bottom left panel only. The same applies
+    to beam and scalebar (if given). The last panel always contains a  
+    horizontal colorbar.
+
+    Mandatory unnamed, ordered arguments:
+        fitsfile    Path and file name of the fits cube to be plotted. Remove
+                    degenerate axes such as the Stokes axis.
+        
+        ncols       number of columns of the grid
+        nrows       number of rows of the grid
+        
+        chan_start  Channel number of first channel to plot in top left corner.
+        
+        chan_iter   Plot every chan_iter channel.
+        
+
+    Optional arguments:
+        chan_width  Channel width in km/s.
+        chan_velo0  Velocity of first channel in the cube.
+                    These arguments are used to calculate thevelocity of each 
+                    channel map. Will be replaced in the future by the information 
+                    giben in the fits header but has to be specified manually at
+                    the moment.
+    
+        out         Path and file name of the created plot.
+                    If not specified, the plot will be saved where the input image
+                    is located. Default format: png
+                    
+        figsize     Fiugre size as tpuel in inches. Default: (8.27, 11.69) A4 size
+        
+        cmap        Colormap to plot the image.
+                    If not specified, the matplotlib default will be used, usually
+                    this is viridis.
+                    Every named matplotlib colormap can be used or any matplotlib 
+                    colormap object.
+                    For grayscale use cmap='grayscale'
+                    
+        vmin        Minimum value for colormap normalization.
+        vmax        Maximum value for colormap normalization.
+        
+        stretch     Colormap strech, e.g. 'linear', 'log', 'sqrt', 'arcsinh'.
+                    Linear and log scaling are fully implemented, other scaling can
+                    cause errors when unusual argument combinations are chosen.
+        
+        recenter    Center the image on this location and set image width/height.
+                    You either have to specify radius or width and height.
+                    Must be an array containing an astropy.SkyCoord object plus one 
+                    or two angular distances: [SkyCoord(...), 1*u.arcmin]
+                    
+        contour     List of contour elements.
+                    Each contour element must be a list of mask type, image file, list
+                    of contour levels and list of colors for each contour. The mask 
+                    type can be either 'cubemask' or 'pixelmask'. A cube mask is a fits 
+                    cube with the channel corresponding to the image channel is plotted
+                    as contour, i.e. the contours can be different for each channel.
+                    Pixel mask specifies a single plane image, i.e. the contours are 
+                    identical in each panel. If only one color is given, it will be 
+                    used for all contours.
+                    Might be replaced be automatic detection if cube or single plane
+                    in the future.
+                    
+        colorbar_location   As the name says.
+                            Can be, e.g. 'bottom', 'right', ...
+        colorbar_cmap       The colorbar is generated via matplotlib and thus
+                            specified manually at the moment. Make sure you use
+                            the same colorbar as in the cmap argument.
+                            Will be updated in a way that cmap is enough and this 
+                            argument will be not necessary anymore.
+        colorbar_label      Can be specified only when colorbar_location is given.
+                            String containing the label.
+                            
+        scalebar_length     As the name says. Must be an angular astropy.units 
+                            object, e.g. 10.0*u.arcmin
+        scalebar_label      String containing the label to be plotted below the 
+                            scalebar.
+        scalebar_corner     Where should the scalebar and label be plotted?
+                            E.g. 'bottom left'
+        
+        beam_corner Plot a beam ellipse as given in the fits header in this corner 
+                    of the plot. Does not have to be a corner. 'bottom' also works.
+    
+    
+    General style settings
+        Settings that do not have to be changed for each plot but maybe once per 
+        script or once per project. Often used ones are tick_label_xformat, 
+        ticks_xspacing and the corresponding settings for y.
+            Can be accessed via
+        import aplpy_plotting as ap
+        ap.setting = ...
+        See the aplpy_plotting.py main file the exact setting names if you need to 
+        change them.
+
+
+    example:
     
     aplpy_channel_map(fitscube, 
                       ncols, 
@@ -285,8 +380,8 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                       vmin=-0.05, 
                       vmax=3.5, 
                       stretch='linear', 
-                      recenter = SkyCoord('01h23m45.6s 12d34m45.6s'), 
-                      contour=['contour.fits', [1,2,3], ['white', 'grey', 'black']], 
+                      recenter = [SkyCoord('01h23m45.6s 12d34m45.6s'), 10.0*u.arcsec], 
+                      contour=['pixelmask', 'contour.fits', [1,2,3], ['white', 'grey', 'black']], 
                       beam_corner='bottom left', 
                       colorbar_cmap=mpl.cm.jet, 
                       colorbar_label='flux density [Jy/beam]', 
@@ -295,11 +390,6 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                       scalebar_corner='bottom',
                       out='cube.png'
                       )
-    
-    mandatory (ordered!) arguments are: fitscube, ncols, nrows, chan_start, chan_iter to set up a basic 
-    channel map 'fitscube' in ncols columns and nrows rows starting at channel chan_start at steps of 
-    chan_iter
-    grayscale plotting is accessible via cmap='grayscale'
     """
     
     print "--> plotting channel map "+fitscube
@@ -447,7 +537,68 @@ def aplpy_plot_pv(fitspv, **kwargs):
     aplpy_plot_pv: position-velocity slice plotting
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    There will be a proper docstring (like for aplpy_plot) in the future ;-)
+    Mandatory unnamed arguments:
+        fitspv      Path and file name of the fits image to be plotted. This must
+                    have one velocity axis and one spatial (offset) axis, such as
+                    generated by CASA impv().
+        
+
+    Optional arguments:
+        out         Path and file name of the created plot.
+                    If not specified, the plot will be saved where the input image
+                    is located. Default format: png
+        
+        figsize     Fiugre size as tpuel in inches. No default.
+        
+        xlabel      Label of the xaxis. As the PV slice can be calculated in 
+                    arbitrary direction, this can be just an offset or along a
+                    coordniate axis (e.g. RA).
+        ylabel      Label of the yaxis. Both labels or none must be given.
+                    If neither xlabel, nor ylabel is specified, the header 
+                    information is used.
+        
+        cmap        Colormap to plot the image.
+                    If not specified, the matplotlib default will be used, usually
+                    this is viridis.
+                    Every named matplotlib colormap can be used or any matplotlib 
+                    colormap object.
+                    For grayscale use cmap='grayscale'
+                    
+        vmin        Minimum value for colormap normalization.
+        vmax        Maximum value for colormap normalization.
+        
+        stretch     Colormap strech, e.g. 'linear', 'log', 'sqrt', 'arcsinh'.
+                    Linear and log scaling are fully implemented, other scaling can
+                    cause errors when unusual argument combinations are chosen.
+        
+        recenter    Center the image on this location and set image width/height.
+                    You either have to specify radius or width and height.
+                    Must be an array containing an astropy.SkyCoord object plus one 
+                    or two angular distances: [SkyCoord(...), 1*u.arcmin]
+                    
+        contour     List of contour elements.
+                    Each contour element must be a list of 'image file', list of 
+                    contour levels and list of colors for each contour. If only one
+                    color is given, it will be used for all contours.
+                    
+        colorbar_location   As the name says.
+                            Can be, e.g. 'bottom', 'right', ...
+        colorbar_label      Can be specified only when colorbar_location is given.
+                            String containing the label.
+    
+    
+    General style settings
+        Settings that do not have to be changed for each plot but maybe once per 
+        script or once per project. Often used ones are tick_label_xformat, 
+        ticks_xspacing and the corresponding settings for y.
+            Can be accessed via
+        import aplpy_plotting as ap
+        ap.setting = ...
+        See the aplpy_plotting.py main file the exact setting names if you need to 
+        change them.
+
+
+    example:
     
     aplpy_plot_pv('abc.fits', 
                   figsize = (8.27, 11.69),
@@ -545,7 +696,104 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
     aplpy_map_grid: grid plotting function
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    There will be a proper docstring (like for aplpy_plot) in the future ;-)
+    Plot a grid of images. Each panel will have an overlay with the file name
+    (can be changed with label_text). Axis labels are plotted on the bottom left 
+    panel only. The same applies to beam and scalebar (if given). The last panel 
+    always contains a horizontal colorbar. Each image can have its own contour.
+    
+
+    Mandatory unnamed, ordered arguments:
+        fitsfile    List of fits image to be plotted.
+        
+        ncols       number of columns of the grid
+        nrows       number of rows of the grid
+        
+
+    Optional arguments:
+        out         Path and file name of the created plot.
+                    If not specified, the plot will be saved where the input image
+                    is located. Default format: png
+                    
+        figsize     Fiugre size as tpuel in inches. Default: (8.27, 11.69) A4 size
+        
+        cmap        Colormap to plot the image.
+                    If not specified, the matplotlib default will be used, usually
+                    this is viridis.
+                    Every named matplotlib colormap can be used or any matplotlib 
+                    colormap object.
+                    For grayscale use cmap='grayscale'
+                    
+        vmin        Minimum value for colormap normalization.
+        vmax        Maximum value for colormap normalization.
+        
+        stretch     Colormap strech, e.g. 'linear', 'log', 'sqrt', 'arcsinh'.
+                    Linear and log scaling are fully implemented, other scaling can
+                    cause errors when unusual argument combinations are chosen.
+        
+        recenter    Center the image on this location and set image width/height.
+                    You either have to specify radius or width and height.
+                    Must be an array containing an astropy.SkyCoord object plus one 
+                    or two angular distances: [SkyCoord(...), 1*u.arcmin]
+                    
+        contour     List of contour elements in the same order as the input images.
+                    The first contour element will be overplotted the first image, 
+                    the second contour element over the second image and so on.
+                    Each contour element must be a list of image file, list of 
+                    contour levels and list of colors for each contour. If only one
+                    color is given, it will be used for all contours.
+                    If you want to have the same contour on each image, you have 
+                    specify the contour as often as there are input image. (This will
+                    probably change in the near future that you can give just one 
+                    contour to be plotted on all images.)
+                    
+        label_text          List of labels to label to individual panels. Default is
+                            to get a label from the file name without extension and
+                            path.
+        label_kwargs        Keyword arguments to format the label. All plt.text
+                            kwargs are allowed, especially bbox=props can be used.
+                            See example below.
+                    
+        colorbar_location   As the name says.
+                            Can be, e.g. 'bottom', 'right', ...
+        colorbar_cmap       The colorbar is generated via matplotlib and thus
+                            specified manually at the moment. Make sure you use
+                            the same colorbar as in the cmap argument.
+                            Will be updated in a way that cmap is enough and this 
+                            argument will be not necessary anymore.
+        colorbar_label      Can be specified only when colorbar_location is given.
+                            String containing the label.
+                            
+        scalebar_length     As the name says. Must be an angular astropy.units 
+                            object, e.g. 10.0*u.arcmin
+        scalebar_label      String containing the label to be plotted below the 
+                            scalebar.
+        scalebar_corner     Where should the scalebar and label be plotted?
+                            E.g. 'bottom left'
+        
+        beam_corner Plot a beam ellipse as given in the fits header in this corner 
+                    of the plot. Does not have to be a corner. 'bottom' also works.
+                    Beams are plotted in each panel as they can be different for 
+                    different images.
+                    
+        overlay     List of overlay elements.
+                    Each overlay element is a list of shape (plt.scatter type), 
+                    astropy.SkyCoord object specifying the position, size as 
+                    angular astropy.unit and further plt.scatter kwargs (can be 
+                    empty).
+    
+    
+    General style settings
+        Settings that do not have to be changed for each plot but maybe once per 
+        script or once per project. Often used ones are tick_label_xformat, 
+        ticks_xspacing and the corresponding settings for y.
+            Can be accessed via
+        import aplpy_plotting as ap
+        ap.setting = ...
+        See the aplpy_plotting.py main file the exact setting names if you need to 
+        change them.
+
+
+    example:
     
     props = {'boxstyle': "round", 'facecolor': "w", 'edgecolor': "black", 'linewidth': 0.5, 'alpha': 0.8}
     aplpy_map_grid([image1.fits,image2.fits], 
@@ -568,11 +816,6 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                    scalebar_label  = 'string', 
                    scalebar_corner = 'bottom'
                    )
-    
-    mandatory (ordered!) arguments are: fitsimages, ncols, nrows
-    to set up a grid of single plane maps 'fitsimages' in ncols columns and nrows rows 
-    grayscale plotting is accessible via cmap='grayscale'
-    each image can have its own contour, give contour options in the same order as fitsimages
     """
     
     print "--> plotting map grid of these maps: ", fitsimages
@@ -649,7 +892,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                     if (kwargs['overlay'][olay][0] == 'circle'):
                         fig.show_circles(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, radius=kwargs['overlay'][olay][2].to(u.degree).value, **kwargs['overlay'][olay][3])
                     else:
-                        print "--> other shapes are not yet implemented"
+                        fig.show_markers(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, marker=kwargs['overlay'][olay][0], s=kwargs['overlay'][olay][2], **kwargs['overlay'][olay][3])
             
             # beam settings
             if 'beam_corner' in kwargs:
