@@ -50,8 +50,8 @@ ticks_color           = 'black'
 # user-adjustable settings come with a default value
 global tick_label_xformat; tick_label_xformat = 'hh:mm:ss.ss'
 global tick_label_yformat; tick_label_yformat = 'dd:mm:ss.ss'
-global ticks_xspacing; ticks_xspacing = 0.2		# unit: degrees!
-global ticks_yspacing; ticks_yspacing = 0.2 		# unit: degrees!
+global ticks_xspacing; ticks_xspacing = Angle('0 1.0 0', unit='hourangle')
+global ticks_yspacing; ticks_yspacing = 1.0*u.arcmin
 global ticks_minor_frequency; ticks_minor_frequency = 5
 
 # define new viridis colormap with less dark blue
@@ -120,14 +120,19 @@ def aplpy_plot(fitsfile, **kwargs):
 		else:
 			print "--> specify SkyCoord(x,y) and either radius or width, height. not recentering"
 	
-	# contours?
+	# contours
 	if 'contour' in kwargs:
 		for cont_i in np.arange(len(kwargs['contour'])):
 			if len(kwargs['contour'][cont_i]) == 3:
 				fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
 			else:
 				print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
-
+			if 'clabel' in kwargs:
+				if kwargs['clabel'] == True:
+					fig._layers['contour_set_'+str(cont_i+1)].clabel()
+				if isinstance(kwargs['clabel'],dict):
+					fig._layers['contour_set_'+str(cont_i+1)].clabel(**kwargs['clabel'])
+	
 	# colorbar settings
 	if 'colorbar_location' in kwargs:
 		fig.add_colorbar()
@@ -142,7 +147,7 @@ def aplpy_plot(fitsfile, **kwargs):
 
 	# scale bar
 	if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-		fig.add_scalebar(length=kwargs['scalebar_length'], label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
+		fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
 		fig.scalebar.set_linestyle(scalebar_linestyle)
 		fig.scalebar.set_linewidth(scalebar_linewidth)
 		fig.scalebar.set_color(scalebar_color)
@@ -173,8 +178,8 @@ def aplpy_plot(fitsfile, **kwargs):
 	fig.tick_labels.set_xformat(tick_label_xformat)
 	fig.tick_labels.set_yformat(tick_label_yformat)
 	fig.ticks.show()
-	fig.ticks.set_xspacing(ticks_xspacing)
-	fig.ticks.set_yspacing(ticks_yspacing)
+	fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+	fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 	fig.ticks.set_minor_frequency(ticks_minor_frequency)
 	fig.ticks.set_color(ticks_color)
 
@@ -287,8 +292,8 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
 			fig.axis_labels.hide()
 			fig.tick_labels.hide()
 			fig.ticks.show()
-			fig.ticks.set_xspacing(ticks_xspacing)
-			fig.ticks.set_yspacing(ticks_yspacing)
+			fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+			fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 			fig.ticks.set_minor_frequency(ticks_minor_frequency)
 			fig.ticks.set_color(ticks_color)
 			
@@ -336,14 +341,14 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
 			fig.tick_labels.set_xformat(tick_label_xformat)
 			fig.tick_labels.set_yformat(tick_label_yformat)
 			fig.ticks.show()
-			fig.ticks.set_xspacing(ticks_xspacing)
-			fig.ticks.set_yspacing(ticks_yspacing)
+			fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+			fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 			fig.ticks.set_minor_frequency(ticks_minor_frequency)
 			fig.ticks.set_color(ticks_color)
 
 #			fig.remove_scalebar()
 			if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-				fig.add_scalebar(length=kwargs['scalebar_length'], label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
+				fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
 				fig.scalebar.set_font(size=scalebar_fontsize)
 				fig.scalebar.set_linestyle(scalebar_linestyle)
 				fig.scalebar.set_linewidth(scalebar_linewidth)
@@ -430,8 +435,8 @@ def aplpy_plot_pv(fitspv, **kwargs):
 #	fig.tick_labels.set_xformat(tick_label_xformat_pv)
 #	fig.tick_labels.set_yformat(tick_label_yformat_pv)
 	fig.ticks.show()
-#	fig.ticks.set_xspacing(ticks_xspacing)
-#	fig.ticks.set_yspacing(ticks_yspacing)
+#	fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+#	fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 	fig.ticks.set_minor_frequency(ticks_minor_frequency)
 	fig.ticks.set_color(ticks_color)
 	
@@ -539,8 +544,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 			fig.axis_labels.hide()
 			fig.tick_labels.hide()
 			fig.ticks.show()
-			fig.ticks.set_xspacing(ticks_xspacing)
-			fig.ticks.set_yspacing(ticks_yspacing)
+			fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+			fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 			fig.ticks.set_minor_frequency(ticks_minor_frequency)
 			fig.ticks.set_color(ticks_color)
 			
@@ -574,14 +579,14 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 			fig.tick_labels.set_xformat(tick_label_xformat)
 			fig.tick_labels.set_yformat(tick_label_yformat)
 			fig.ticks.show()
-			fig.ticks.set_xspacing(ticks_xspacing)
-			fig.ticks.set_yspacing(ticks_yspacing)
+			fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
+			fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
 			fig.ticks.set_minor_frequency(ticks_minor_frequency)
 			fig.ticks.set_color(ticks_color)
 
 	#		fig.remove_scalebar()
 			if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-				fig.add_scalebar(length=kwargs['scalebar_length'], label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
+				fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
 				fig.scalebar.set_font(size=scalebar_fontsize)
 				fig.scalebar.set_linestyle(scalebar_linestyle)
 				fig.scalebar.set_linewidth(scalebar_linewidth)
