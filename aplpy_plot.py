@@ -12,20 +12,15 @@
 ###################################################################################################
 
 
-import os
-import aplpy
-import numpy as np
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.coordinates import Angle
-import matplotlib as mpl
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+import __os__
+import __aplpy__
+import numpy as __np__
+from astropy import units as __u__
+from matplotlib import rc as __rc__
+__rc__('text',usetex=True)
+from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+import warnings as __warnings__
+__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
 
 ###################################################################################################
 
@@ -131,7 +126,7 @@ def aplpy_plot(fitsfile, **kwargs):
     
     print("--> plotting map "+fitsfile)
     
-    fig = aplpy.FITSFigure(fitsfile)
+    fig = __aplpy__.FITSFigure(fitsfile)
     
     if 'cmap' in kwargs:
         if kwargs['cmap'] == 'grayscale':
@@ -156,15 +151,15 @@ def aplpy_plot(fitsfile, **kwargs):
     # recenter image
     if 'recenter' in kwargs:
         if (len(kwargs['recenter']) == 2):
-            fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(u.degree).value)
+            fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(__u__.degree).value)
         elif (len(kwargs['recenter']) == 3):
-            fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
+            fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(__u__.degree).value, height=kwargs['recenter'][2].to(__u__.degree).value)
         else:
             print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
     
     # contours
     if 'contour' in kwargs:
-        for cont_i in np.arange(len(kwargs['contour'])):
+        for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
             else:
@@ -184,34 +179,35 @@ def aplpy_plot(fitsfile, **kwargs):
             fig.colorbar.set_axis_label_text(kwargs['colorbar_label'])
         if 'stretch' in kwargs:
             if (kwargs['stretch'] == 'log'):
-                log_ticks = [float('{:.2f}'.format(round(x,int(-1*np.log10(kwargs['vmin']))))) for x in np.logspace(np.log10(kwargs['vmin']),np.log10(kwargs['vmax']),num=10, endpoint=True)]
+                log_ticks = [float('{:.2f}'.format(round(x,int(-1*__np__.log10(kwargs['vmin']))))) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=10, endpoint=True)]
                 fig.colorbar.set_ticks(log_ticks)
 
     # scale bar
     if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-        fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
-        fig.scalebar.set_linestyle(scalebar_linestyle)
-        fig.scalebar.set_linewidth(scalebar_linewidth)
-        fig.scalebar.set_color(scalebar_color)
+        fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
+        fig.scalebar.set_font(size=_scalebar_fontsize)
+        fig.scalebar.set_linestyle(_scalebar_linestyle)
+        fig.scalebar.set_linewidth(_scalebar_linewidth)
+        fig.scalebar.set_color(_scalebar_color)
 
     # beam settings
     if 'beam_corner' in kwargs:
         fig.add_beam()
         fig.beam.show()
         fig.beam.set_corner(kwargs['beam_corner'])
-        fig.beam.set_frame(beam_frame)
-        fig.beam.set_color(beam_color)
+        fig.beam.set_frame(_beam_frame)
+        fig.beam.set_color(_beam_color)
     
     # data set overlay
     if 'label_text' in kwargs:
-        fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=velo_fontsize)
+        fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=_velo_fontsize)
         if 'label_kwargs' in kwargs:
-            fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=velo_fontsize, **kwargs['label_kwargs'])
+            fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=_velo_fontsize, **kwargs['label_kwargs'])
     
     if 'overlay' in kwargs:
-        for olay in np.arange(len(kwargs['overlay'])):
+        for olay in __np__.arange(len(kwargs['overlay'])):
             if (kwargs['overlay'][olay][0] == 'circle'):
-                fig.show_circles(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, radius=kwargs['overlay'][olay][2].to(u.degree).value, **kwargs['overlay'][olay][3])
+                fig.show_circles(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, radius=kwargs['overlay'][olay][2].to(__u__.degree).value, **kwargs['overlay'][olay][3])
             else:
                 fig.show_markers(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, marker=kwargs['overlay'][olay][0], s=kwargs['overlay'][olay][2], **kwargs['overlay'][olay][3])
 
@@ -220,17 +216,17 @@ def aplpy_plot(fitsfile, **kwargs):
     fig.tick_labels.set_xformat(tick_label_xformat)
     fig.tick_labels.set_yformat(tick_label_yformat)
     fig.ticks.show()
-    fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-    fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+    fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+    fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ticks_minor_frequency)
-    fig.ticks.set_color(ticks_color)
+    fig.ticks.set_color(_ticks_color)
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
         print("--> saved file as "+kwargs['out'])
     else:
-        fig.save(os.path.splitext(fitsfile)[0]+'.png', dpi=300, transparent=True)
-        print("--> saved plot as "+os.path.splitext(fitsfile)[0]+'.png')
+        fig.save(__os__.path.splitext(fitsfile)[0]+'.png', dpi=300, transparent=True)
+        print("--> saved plot as "+__os__.path.splitext(fitsfile)[0]+'.png')
 
 
 

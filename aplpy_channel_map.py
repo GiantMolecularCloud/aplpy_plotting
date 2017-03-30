@@ -12,20 +12,17 @@
 ###################################################################################################
 
 
-import os
-import aplpy
-import numpy as np
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.coordinates import Angle
-import matplotlib as mpl
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+import __os__
+import __aplpy__
+import numpy as __np__
+from astropy import units as __u__
+import matplotlib as __mpl__
+import matplotlib.pyplot as __plt__
+from matplotlib import rc as __rc__
+__rc__('text',usetex=True)
+from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+import warnings as __warnings__
+__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
 
 ###################################################################################################
 
@@ -164,16 +161,16 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
     else:
         main_figsize = (8.27, 11.69)    # A4 in inches
     
-    main_fig = plt.figure(figsize=main_figsize)
+    main_fig = __plt__.figure(figsize=main_figsize)
 
     # convert to float for python 2 compatibility
     ncols_f = float(ncols)
     nrows_f = flaot(nrows)
 
-    for i in np.arange(nrows*ncols):
+    for i in __np__.arange(nrows*ncols):
         
         # get subplot specific info
-        subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-np.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
+        subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
         #chn_slice   = [chan_start+i*chan_iter,0]   # if 4th axis is present
         chn_slice   = [chan_start+i*chan_iter]  # if no 4th axis available
 
@@ -186,7 +183,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         if ( i < nrows*ncols-1 ):
             print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
             
-            fig = aplpy.FITSFigure(fitscube, figure=main_fig, subplot=subplt_size, dimensions=[0,1], slices=chn_slice)
+            fig = __aplpy__.FITSFigure(fitscube, figure=main_fig, subplot=subplt_size, dimensions=[0,1], slices=chn_slice)
             if 'vmin' and 'vmax' in kwargs:
                 if 'stretch' in kwargs:
                     if 'cmap' in kwargs:
@@ -204,9 +201,9 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             # recenter image
             if 'recenter' in kwargs:
                 if (len(kwargs['recenter']) == 2):
-                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(u.degree).value)
+                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(__u__.degree).value)
                 elif (len(kwargs['recenter']) == 3):
-                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
+                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(__u__.degree).value, height=kwargs['recenter'][2].to(__u__.degree).value)
                 else:
                     print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
             
@@ -227,44 +224,44 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.axis_labels.hide()
             fig.tick_labels.hide()
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ticks_minor_frequency)
             fig.ticks.set_color(ticks_color)
             
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
-                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=velo_fontsize)
+                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=_velo_fontsize)
             else:
-                fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=velo_fontsize)
+                fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=_velo_fontsize)
             
             # beam settings
             if 'beam_corner' in kwargs:
                 fig.add_beam()
                 fig.beam.show()
                 fig.beam.set_corner(kwargs['beam_corner'])
-                fig.beam.set_frame(beam_frame)
-                fig.beam.set_color(beam_color)
+                fig.beam.set_frame(_beam_frame)
+                fig.beam.set_color(_beam_color)
             
         # colorbar settings
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
                 print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-                ax1 = main_fig.add_axes([0.05+(i%ncols_f)*0.9/ncols_f+0.05/ncols_f, 0.95-np.ceil((i+1)/ncols_f)*0.9/nrows_f+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
+                ax1 = main_fig.add_axes([0.05+(i%ncols_f)*0.9/ncols_f+0.05/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
                 if 'stretch' in kwargs:
                     if (kwargs['stretch'] == 'linear'):
-                        colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+                        colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
                         colorbar.set_label(kwargs['colorbar_label'])
                     elif (kwargs['stretch'] == 'log'):
-                        log_ticks = [float('{:.2f}'.format(x)) for x in np.logspace(np.log10(kwargs['vmin']),np.log10(kwargs['vmax']),num=5, endpoint=True)]
-                        colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='horizontal')
+                        log_ticks = [float('{:.2f}'.format(x)) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=5, endpoint=True)]
+                        colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='horizontal')
                         colorbar.set_label(kwargs['colorbar_label'])
                         colorbar.set_ticks(log_ticks)
                         colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
                     else:
                         print("--> only linear and log stretch supported!")
                 else:
-                    colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+                    colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
                     colorbar.set_label(kwargs['colorbar_label'])
             else:
                 print("--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar")
@@ -276,25 +273,25 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.tick_labels.set_xformat(tick_label_xformat)
             fig.tick_labels.set_yformat(tick_label_yformat)
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ticks_minor_frequency)
-            fig.ticks.set_color(ticks_color)
+            fig.ticks.set_color(_ticks_color)
 
 #           fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-                fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
-                fig.scalebar.set_font(size=scalebar_fontsize)
-                fig.scalebar.set_linestyle(scalebar_linestyle)
-                fig.scalebar.set_linewidth(scalebar_linewidth)
-                fig.scalebar.set_color(scalebar_color)
+                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
+                fig.scalebar.set_font(size=_scalebar_fontsize)
+                fig.scalebar.set_linestyle(_scalebar_linestyle)
+                fig.scalebar.set_linewidth(_scalebar_linewidth)
+                fig.scalebar.set_color(_scalebar_color)
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
         print("--> saved file as "+kwargs['out'])
     else:
-        fig.save(os.path.splitext(fitscube)[0]+'.png', dpi=300, transparent=True)
-        print("--> saved file as "+os.path.splitext(fitscube)[0]+'.png')
+        fig.save(__os__.path.splitext(fitscube)[0]+'.png', dpi=300, transparent=True)
+        print("--> saved file as "+__os__.path.splitext(fitscube)[0]+'.png')
 
 
 ###################################################################################################
