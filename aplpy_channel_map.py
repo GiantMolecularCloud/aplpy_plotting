@@ -165,10 +165,15 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         main_figsize = (8.27, 11.69)    # A4 in inches
     
     main_fig = plt.figure(figsize=main_figsize)
+
+    # convert to float for python 2 compatibility
+    ncols_f = float(ncols)
+    nrows_f = flaot(nrows)
+
     for i in np.arange(nrows*ncols):
         
         # get subplot specific info
-        subplt_size = [0.05+(i%ncols)*0.9/ncols, 0.95-np.ceil((i+1)/ncols)*0.9/nrows, 0.9/ncols, 0.9/nrows]
+        subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-np.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
         #chn_slice   = [chan_start+i*chan_iter,0]   # if 4th axis is present
         chn_slice   = [chan_start+i*chan_iter]  # if no 4th axis available
 
@@ -229,7 +234,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
-                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km/s', color='black', relative=True, size=velo_fontsize)
+                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=velo_fontsize)
             else:
                 fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=velo_fontsize)
             
@@ -245,7 +250,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
                 print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-                ax1 = main_fig.add_axes([0.05+(i%ncols)*0.9/ncols+0.05/ncols, 0.95-np.ceil((i+1)/ncols)*0.9/nrows+0.5*0.9/nrows, 0.9*0.9/ncols, colorbar_width*0.9/nrows])
+                ax1 = main_fig.add_axes([0.05+(i%ncols_f)*0.9/ncols_f+0.05/ncols_f, 0.95-np.ceil((i+1)/ncols_f)*0.9/nrows_f+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
                 if 'stretch' in kwargs:
                     if (kwargs['stretch'] == 'linear'):
                         colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')

@@ -165,10 +165,15 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         main_figsize = (8.27, 11.69)    # A4 in inches
     
     main_fig = plt.figure(figsize = main_figsize)
+
+    # convert to float for python 2 compatibility
+    ncols_f = float(ncols)
+    nrows_f = flaot(nrows)
+
     for i in np.arange(len(fitsimages)):
         
         # get subplot specific info
-        subplt_size = [0.05+(i%ncols)*0.9/ncols, 0.95-np.ceil((i+1)/ncols)*0.9/nrows, 0.9/ncols, 0.9/nrows]
+        subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-np.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
         
         # plot channel map if not last panel
         if ( i < nrows*ncols-1 ):
@@ -263,7 +268,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         
         # colorbar settings
         if 'colorbar_cmap' and 'colorbar_label' in kwargs:
-            ax1 = main_fig.add_axes([0.05+(ncols-1+0.05)*0.9/ncols, 0.05+0.5*0.9/nrows, 0.9*0.9/ncols, colorbar_width*0.9/nrows])
+            ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
             if 'vmin' and 'vmax' in kwargs:
                 colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
             else:
