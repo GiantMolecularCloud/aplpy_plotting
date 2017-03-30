@@ -23,7 +23,7 @@ from matplotlib import rc as __rc__
 __rc__('text',usetex=True)
 from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
 import warnings as __warnings__
-__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
+__warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
 
 ###################################################################################################
 
