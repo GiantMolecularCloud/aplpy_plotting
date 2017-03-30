@@ -11,6 +11,7 @@
 
 ###################################################################################################
 
+import aplpy_plotting as ap
 
 import os as __os__
 import aplpy as __aplpy__
@@ -158,13 +159,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
 
     # ticks + labels
     fig.tick_labels.show()
-#   fig.tick_labels.set_xformat(tick_label_xformat_pv)
-#   fig.tick_labels.set_yformat(tick_label_yformat_pv)
+#   fig.tick_labels.set_xformat(ap.tick_label_xformat_pv)
+#   fig.tick_labels.set_yformat(ap.tick_label_yformat_pv)
     fig.ticks.show()
-#   fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
-#   fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
-    fig.ticks.set_minor_frequency(ticks_minor_frequency)
-    fig.ticks.set_color(_ticks_color)
+#   fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
+#   fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
+    fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
+    fig.ticks.set_color(ap._ticks_color)
     
     # axis labels
     if 'xlabel' and 'ylabel' in kwargs:

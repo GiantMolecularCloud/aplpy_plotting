@@ -11,6 +11,7 @@
 
 ###################################################################################################
 
+import aplpy_plotting as ap
 
 import os as __os__
 import aplpy as __aplpy__
@@ -224,24 +225,24 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.axis_labels.hide()
             fig.tick_labels.hide()
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
-            fig.ticks.set_minor_frequency(ticks_minor_frequency)
-            fig.ticks.set_color(ticks_color)
+            fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
+            fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
+            fig.ticks.set_color(ap.ticks_color)
             
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
-                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=_velo_fontsize)
+                fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=ap._velo_fontsize)
             else:
-                fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=_velo_fontsize)
+                fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=ap._velo_fontsize)
             
             # beam settings
             if 'beam_corner' in kwargs:
                 fig.add_beam()
                 fig.beam.show()
                 fig.beam.set_corner(kwargs['beam_corner'])
-                fig.beam.set_frame(_beam_frame)
-                fig.beam.set_color(_beam_color)
+                fig.beam.set_frame(ap._beam_frame)
+                fig.beam.set_color(ap._beam_color)
             
         # colorbar settings
         if (i == ncols*nrows-1):
@@ -262,7 +263,8 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                         print("--> only linear and log stretch supported!")
                 else:
                     colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
-                    colorbar.set_label(kwargs['colorbar_label'])
+                    colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
+                    colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
             else:
                 print("--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar")
             
@@ -270,21 +272,21 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         if ( i == (nrows-1)*ncols ):
             fig.axis_labels.show()
             fig.tick_labels.show()
-            fig.tick_labels.set_xformat(tick_label_xformat)
-            fig.tick_labels.set_yformat(tick_label_yformat)
+            fig.tick_labels.set_xformat(ap.tick_label_xformat)
+            fig.tick_labels.set_yformat(ap.tick_label_yformat)
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
-            fig.ticks.set_minor_frequency(ticks_minor_frequency)
-            fig.ticks.set_color(_ticks_color)
+            fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
+            fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
+            fig.ticks.set_color(ap._ticks_color)
 
 #           fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
                 fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
-                fig.scalebar.set_font(size=_scalebar_fontsize)
-                fig.scalebar.set_linestyle(_scalebar_linestyle)
-                fig.scalebar.set_linewidth(_scalebar_linewidth)
-                fig.scalebar.set_color(_scalebar_color)
+                fig.scalebar.set_font(size=ap._scalebar_fontsize)
+                fig.scalebar.set_linestyle(ap._scalebar_linestyle)
+                fig.scalebar.set_linewidth(ap._scalebar_linewidth)
+                fig.scalebar.set_color(ap._scalebar_color)
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
