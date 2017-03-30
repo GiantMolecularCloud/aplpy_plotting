@@ -37,8 +37,8 @@ __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
 # settings that are dataset dependend, i.e. need to be changed for a new dataset
 tick_label_xformat = 'hh:mm:ss.ss'
 tick_label_yformat = 'dd:mm:ss.ss'
-ticks_xspacing = Angle('0 1 0', unit='hourangle')
-ticks_yspacing = 1.0*u.arcmin
+ticks_xspacing = __Angle__('0 1 0', unit='hourangle')
+ticks_yspacing = 1.0*__u__.arcmin
 ticks_minor_frequency = 5
 
 
