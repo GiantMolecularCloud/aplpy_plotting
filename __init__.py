@@ -13,9 +13,9 @@ pV diagrams, ... in a quality that (hopefully) allows publishing.
 import os as __os__
 import aplpy as __aplpy__
 import numpy as __np__
-from astropy.coordinates import __SkyCoord__
+from astropy.coordinates import SkyCoord as __SkyCoord__
 from astropy import units as __u__
-from astropy.coordinates import __Angle__
+from astropy.coordinates import Angle as __Angle__
 import matplotlib as __mpl__
 import matplotlib.colors as __colors__
 import matplotlib.pyplot as __plt__
