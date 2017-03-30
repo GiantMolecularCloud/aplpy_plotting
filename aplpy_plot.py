@@ -11,7 +11,7 @@
 
 ###################################################################################################
 
-from __future__ import division
+
 import os
 import aplpy
 import numpy as np
@@ -129,7 +129,7 @@ def aplpy_plot(fitsfile, **kwargs):
     """
 
     
-    print "--> plotting map "+fitsfile
+    print("--> plotting map "+fitsfile)
     
     fig = aplpy.FITSFigure(fitsfile)
     
@@ -160,7 +160,7 @@ def aplpy_plot(fitsfile, **kwargs):
         elif (len(kwargs['recenter']) == 3):
             fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
         else:
-            print "--> specify SkyCoord(x,y) and either radius or width, height. not recentering"
+            print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
     
     # contours
     if 'contour' in kwargs:
@@ -168,7 +168,7 @@ def aplpy_plot(fitsfile, **kwargs):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
             else:
-                print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
+                print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
             if 'clabel' in kwargs:
                 if kwargs['clabel'] == True:
                     fig._layers['contour_set_'+str(cont_i+1)].clabel()
@@ -227,10 +227,10 @@ def aplpy_plot(fitsfile, **kwargs):
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
         fig.save(os.path.splitext(fitsfile)[0]+'.png', dpi=300, transparent=True)
-        print "--> saved plot as "+os.path.splitext(fitsfile)[0]+'.png'
+        print("--> saved plot as "+os.path.splitext(fitsfile)[0]+'.png')
 
 
 

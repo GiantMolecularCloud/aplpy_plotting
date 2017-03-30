@@ -11,7 +11,7 @@
 
 ###################################################################################################
 
-from __future__ import division
+
 import os
 import aplpy
 import numpy as np
@@ -155,9 +155,9 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                       )
     """
     
-    print "--> plotting channel map "+fitscube
+    print("--> plotting channel map "+fitscube)
     if not ('chan_width' and 'chan_vel0' in kwargs):
-        print "--> channel width and velocity of first channel not given. will not calculate velocity"
+        print("--> channel width and velocity of first channel not given. will not calculate velocity")
     
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
@@ -179,7 +179,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         
         # plot channel map if not last panel
         if ( i < nrows*ncols-1 ):
-            print "--> panel "+str(i+1)+" of "+str(nrows*ncols)
+            print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
             
             fig = aplpy.FITSFigure(fitscube, figure=main_fig, subplot=subplt_size, dimensions=[0,1], slices=chn_slice)
             if 'vmin' and 'vmax' in kwargs:
@@ -203,7 +203,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                 elif (len(kwargs['recenter']) == 3):
                     fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
                 else:
-                    print "--> specify SkyCoord(x,y) and either radius or width, height. not recentering"
+                    print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
             
             # contours?
             if 'contour' in kwargs:
@@ -213,9 +213,9 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                     elif kwargs['contour'][0] == 'cubemask':
                         fig.show_contour(data=kwargs['contour'][1], dimensions=[0,1], slices=chn_slice, levels=kwargs['contour'][2], colors=kwargs['contour'][3])
                     else:
-                        print "--> wrong mask type specification"
+                        print("--> wrong mask type specification")
                 else:
-                    print "--> wrong number or format of contour parameters. not plotting contours"
+                    print("--> wrong number or format of contour parameters. not plotting contours")
             
             
             # ticks + labels
@@ -244,7 +244,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         # colorbar settings
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
-                print "--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar"
+                print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
                 ax1 = main_fig.add_axes([0.05+(i%ncols)*0.9/ncols+0.05/ncols, 0.95-np.ceil((i+1)/ncols)*0.9/nrows+0.5*0.9/nrows, 0.9*0.9/ncols, colorbar_width*0.9/nrows])
                 if 'stretch' in kwargs:
                     if (kwargs['stretch'] == 'linear'):
@@ -257,12 +257,12 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                         colorbar.set_ticks(log_ticks)
                         colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
                     else:
-                        print "--> only linear and log stretch supported!"
+                        print("--> only linear and log stretch supported!")
                 else:
                     colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
                     colorbar.set_label(kwargs['colorbar_label'])
             else:
-                print "--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar"
+                print("--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar")
             
         # add axis label and scale bar if bottom left plot
         if ( i == (nrows-1)*ncols ):
@@ -286,10 +286,10 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
         fig.save(os.path.splitext(fitscube)[0]+'.png', dpi=300, transparent=True)
-        print "--> saved file as "+os.path.splitext(fitscube)[0]+'.png'
+        print("--> saved file as "+os.path.splitext(fitscube)[0]+'.png')
 
 
 ###################################################################################################

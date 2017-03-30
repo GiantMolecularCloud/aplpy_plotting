@@ -9,7 +9,7 @@ pV diagrams, ... in a quality that (hopefully) allows publishing.
 
 ###################################################################################################
 
-from __future__ import division
+
 import os
 import aplpy
 import numpy as np

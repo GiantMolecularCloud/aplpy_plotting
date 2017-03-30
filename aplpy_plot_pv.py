@@ -11,7 +11,7 @@
 
 ###################################################################################################
 
-from __future__ import division
+
 import os
 import aplpy
 import numpy as np
@@ -113,7 +113,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
                   )
     """
     
-    print "--> plotting map "+fitspv
+    print("--> plotting map "+fitspv)
     
     if 'figsize' in kwargs:
         fig = aplpy.FITSFigure(fitspv, figsize=kwargs['figsize'])
@@ -136,7 +136,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
         
     # recenter image
     if 'recenter' in kwargs:
-        print "--> recenter not implemented yet"
+        print("--> recenter not implemented yet")
     
     # contours?
     if 'contour' in kwargs:
@@ -144,7 +144,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
             else:
-                print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
+                print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
 
     # colorbar settings
     if 'colorbar_location' in kwargs:
@@ -175,14 +175,14 @@ def aplpy_plot_pv(fitspv, **kwargs):
     if 'xlabel' and 'ylabel' in kwargs:
         fig.set_axis_labels(kwargs['xlabel'],kwargs['ylabel'])
     else:
-        print "--> you need to give both labels"
+        print("--> you need to give both labels")
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
         fig.save(os.path.splitext(fitspv)[0]+'.png', dpi=300, transparent=True)
-        print "--> saved plot as "+os.path.splitext(fitspv)[0]+'.png'
+        print("--> saved plot as "+os.path.splitext(fitspv)[0]+'.png')
 
 
 

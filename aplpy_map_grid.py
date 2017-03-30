@@ -11,7 +11,7 @@
 
 ###################################################################################################
 
-from __future__ import division
+
 import os
 import aplpy
 import numpy as np
@@ -157,7 +157,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                    )
     """
     
-    print "--> plotting map grid of these maps: ", fitsimages
+    print("--> plotting map grid of these maps: ", fitsimages)
     
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
@@ -172,7 +172,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         
         # plot channel map if not last panel
         if ( i < nrows*ncols-1 ):
-            print "--> panel "+str(i+1)+" of "+str(nrows*ncols)
+            print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
             
             fig = aplpy.FITSFigure(fitsimages[i], figure=main_fig, subplot=subplt_size)
             if 'vmin' and 'vmax' in kwargs:
@@ -199,7 +199,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 elif (len(kwargs['recenter']) == 3):
                     fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
                 else:
-                    print "--> specify SkyCoord(x,y) and either radius or width, height. not recentering"
+                    print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
             
             # contours?
             if 'contour' in kwargs:
@@ -207,7 +207,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                     if len(kwargs['contour'][cont_i]) == 3:
                         fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
                     else:
-                        print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
+                        print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
             
             # ticks + labels
             fig.axis_labels.hide()
@@ -272,13 +272,13 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
             colorbar.set_label(kwargs['colorbar_label'], size = colorbar_fontsize)
         else:
-            print "--> you need to define both colorbar_location and colorbar_label to plot a colorbar"
+            print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
         fig.save('grid_plot.png', dpi=300, transparent=True)
-        print "--> saved file as grid_plot.png"
+        print("--> saved file as grid_plot.png")
 
 ###################################################################################################
