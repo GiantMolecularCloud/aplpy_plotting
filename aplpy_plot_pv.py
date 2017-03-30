@@ -11,21 +11,16 @@
 
 ###################################################################################################
 
-from __future__ import division
-import os
-import aplpy
-import numpy as np
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.coordinates import Angle
-import matplotlib as mpl
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+
+import __os__
+import __aplpy__
+import numpy as __np__
+from astropy import units as __u__
+from matplotlib import rc as __rc__
+__rc__('text',usetex=True)
+from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+import warnings as __warnings__
+__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
 
 ###################################################################################################
 
@@ -113,12 +108,12 @@ def aplpy_plot_pv(fitspv, **kwargs):
                   )
     """
     
-    print "--> plotting map "+fitspv
+    print("--> plotting map "+fitspv)
     
     if 'figsize' in kwargs:
-        fig = aplpy.FITSFigure(fitspv, figsize=kwargs['figsize'])
+        fig = __aplpy__.FITSFigure(fitspv, figsize=kwargs['figsize'])
     else:
-        fig = aplpy.FITSFigure(fitspv)
+        fig = __aplpy__.FITSFigure(fitspv)
     
     if 'vmin' and 'vmax' in kwargs:
         if 'stretch' in kwargs:
@@ -136,15 +131,15 @@ def aplpy_plot_pv(fitspv, **kwargs):
         
     # recenter image
     if 'recenter' in kwargs:
-        print "--> recenter not implemented yet"
+        print("--> recenter not implemented yet")
     
     # contours?
     if 'contour' in kwargs:
-        for cont_i in np.arange(len(kwargs['contour'])):
+        for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
             else:
-                print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
+                print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
 
     # colorbar settings
     if 'colorbar_location' in kwargs:
@@ -155,7 +150,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
             fig.colorbar.set_axis_label_text(kwargs['colorbar_label'])
         if 'stretch' in kwargs:
             if (kwargs['stretch'] == 'log'):
-                log_ticks = [float('{:.2f}'.format(round(x,int(-1*np.log10(kwargs['vmin']))))) for x in np.logspace(np.log10(kwargs['vmin']),np.log10(kwargs['vmax']),num=10, endpoint=True)]
+                log_ticks = [float('{:.2f}'.format(round(x,int(-1*__np__.log10(kwargs['vmin']))))) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=10, endpoint=True)]
                 fig.colorbar.set_ticks(log_ticks)
 
     # scale bar
@@ -166,23 +161,23 @@ def aplpy_plot_pv(fitspv, **kwargs):
 #   fig.tick_labels.set_xformat(tick_label_xformat_pv)
 #   fig.tick_labels.set_yformat(tick_label_yformat_pv)
     fig.ticks.show()
-#   fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-#   fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+#   fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+#   fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ticks_minor_frequency)
-    fig.ticks.set_color(ticks_color)
+    fig.ticks.set_color(_ticks_color)
     
     # axis labels
     if 'xlabel' and 'ylabel' in kwargs:
         fig.set_axis_labels(kwargs['xlabel'],kwargs['ylabel'])
     else:
-        print "--> you need to give both labels"
+        print("--> you need to give both labels")
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
-        fig.save(os.path.splitext(fitspv)[0]+'.png', dpi=300, transparent=True)
-        print "--> saved plot as "+os.path.splitext(fitspv)[0]+'.png'
+        fig.save(__os__.path.splitext(fitspv)[0]+'.png', dpi=300, transparent=True)
+        print("--> saved plot as "+__os__.path.splitext(fitspv)[0]+'.png')
 
 
 

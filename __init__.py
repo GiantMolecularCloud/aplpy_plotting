@@ -9,21 +9,21 @@ pV diagrams, ... in a quality that (hopefully) allows publishing.
 
 ###################################################################################################
 
-from __future__ import division
-import os
-import aplpy
-import numpy as np
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.coordinates import Angle
-import matplotlib as mpl
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+
+import os as __os__
+import aplpy as __aplpy__
+import numpy as __np__
+from astropy.coordinates import __SkyCoord__
+from astropy import units as __u__
+from astropy.coordinates import __Angle__
+import matplotlib as __mpl__
+import matplotlib.colors as __colors__
+import matplotlib.pyplot as __plt__
+from matplotlib import rc as __rc__
+__rc__('text',usetex=True)
+from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+import warnings as __warnings__
+__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
 
 ###################################################################################################
 
@@ -43,23 +43,23 @@ ticks_minor_frequency = 5
 
 
 
-# fixed settings, i.e. settings that chould be the same for each and every plot
-velo_fontsize         = 10.0		# unit: point
-colorbar_fontsize     = 10.0		# unit: point
-colorbar_width        = 0.15	    # relative to panel size
-scalebar_frame        = False
-scalebar_linestyle    = 'solid'		# or any other plt.plot linestyle
-scalebar_linewidth    = 2			# unit: points
-scalebar_color        = 'red'		# any named color or mpl.color instance
-scalebar_fontsize     = 10.0    	# only used in channel map to prevent bar sliding over map
-beam_frame            = False
-beam_color            = 'black'
-ticks_color           = 'black'		# this setting overrules the matplotlibrc defaults
+# fixed settings, i.e. settings that should be the same for each and every plot
+_velo_fontsize         = 10.0		# unit: point
+_colorbar_fontsize     = 10.0		# unit: point
+#_colorbar_width        = 0.15	    # relative to panel size
+_scalebar_frame        = False
+_scalebar_linestyle    = 'solid'		# or any other plt.plot linestyle
+_scalebar_linewidth    = 2			# unit: points
+_scalebar_color        = 'red'		# any named color or mpl.color instance
+_scalebar_fontsize     = 10.0    	# only used in channel map to prevent bar sliding over map
+_beam_frame            = False
+_beam_color            = 'black'
+_ticks_color           = 'black'		# this setting overrules the matplotlibrc defaults
 
 
 
 # define new viridis colormap with less dark blue
-viridis_cropped = colors.ListedColormap(mpl.cm.viridis(np.linspace(0.1,1.0,100)))
+viridis_cropped = __colors__.ListedColormap(__mpl__.cm.viridis(np.linspace(0.1,1.0,100)))
 
 
 ###################################################################################################

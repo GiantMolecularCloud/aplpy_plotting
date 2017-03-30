@@ -11,21 +11,17 @@
 
 ###################################################################################################
 
-from __future__ import division
-import os
-import aplpy
-import numpy as np
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.coordinates import Angle
-import matplotlib as mpl
-import matplotlib.colors as colors
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', MatplotlibDeprecationWarning)
+
+import __aplpy__
+import numpy as __np__
+from astropy import units as __u__
+import matplotlib as __mpl__
+import matplotlib.pyplot as __plt__
+from matplotlib import rc as __rc__
+__rc__('text',usetex=True)
+from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+import warnings as __warnings__
+__warnings__.simplefilter('ignore', MatplotlibDeprecationWarning)
 
 ###################################################################################################
 
@@ -157,24 +153,29 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                    )
     """
     
-    print "--> plotting map grid of these maps: ", fitsimages
+    print("--> plotting map grid of these maps: ", fitsimages)
     
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
     else:
         main_figsize = (8.27, 11.69)    # A4 in inches
     
-    main_fig = plt.figure(figsize = main_figsize)
-    for i in np.arange(len(fitsimages)):
+    main_fig = __plt__.figure(figsize = main_figsize)
+
+    # convert to float for python 2 compatibility
+    ncols_f = float(ncols)
+    nrows_f = flaot(nrows)
+
+    for i in __np__.arange(len(fitsimages)):
         
         # get subplot specific info
-        subplt_size = [0.05+(i%ncols)*0.9/ncols, 0.95-np.ceil((i+1)/ncols)*0.9/nrows, 0.9/ncols, 0.9/nrows]
+        subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
         
         # plot channel map if not last panel
         if ( i < nrows*ncols-1 ):
-            print "--> panel "+str(i+1)+" of "+str(nrows*ncols)
+            print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
             
-            fig = aplpy.FITSFigure(fitsimages[i], figure=main_fig, subplot=subplt_size)
+            fig = __aplpy__.FITSFigure(fitsimages[i], figure=main_fig, subplot=subplt_size)
             if 'vmin' and 'vmax' in kwargs:
                 if 'stretch' in kwargs:
                     if 'cmap' in kwargs:
@@ -195,41 +196,41 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             # recenter image
             if 'recenter' in kwargs:
                 if (len(kwargs['recenter']) == 2):
-                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(u.degree).value)
+                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, radius=kwargs['recenter'][1].to(__u__.degree).value)
                 elif (len(kwargs['recenter']) == 3):
-                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(u.degree).value, height=kwargs['recenter'][2].to(u.degree).value)
+                    fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(__u__.degree).value, height=kwargs['recenter'][2].to(__u__.degree).value)
                 else:
-                    print "--> specify SkyCoord(x,y) and either radius or width, height. not recentering"
+                    print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
             
             # contours?
             if 'contour' in kwargs:
-                for cont_i in np.arange(len(kwargs['contour'])):
+                for cont_i in __np__.arange(len(kwargs['contour'])):
                     if len(kwargs['contour'][cont_i]) == 3:
                         fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
                     else:
-                        print "--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours"
+                        print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
             
             # ticks + labels
             fig.axis_labels.hide()
             fig.tick_labels.hide()
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ticks_minor_frequency)
             fig.ticks.set_color(ticks_color)
             
             # data set overlay
             if 'label_text' in kwargs:
-                fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=velo_fontsize)
+                fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=_velo_fontsize)
                 if 'label_kwargs' in kwargs:
-                    fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=velo_fontsize, **kwargs['label_kwargs'])
+                    fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=_velo_fontsize, **kwargs['label_kwargs'])
             else:
-                fig.add_label(0.5, 0.9, fitsimages[i][:-5].replace('_','$\_$'), color='black', relative=True, size=velo_fontsize)
+                fig.add_label(0.5, 0.9, fitsimages[i][:-5].replace('_','$\_$'), color='black', relative=True, size=_velo_fontsize)
             
             if 'overlay' in kwargs:
-                for olay in np.arange(len(kwargs['overlay'])):
+                for olay in __np__.arange(len(kwargs['overlay'])):
                     if (kwargs['overlay'][olay][0] == 'circle'):
-                        fig.show_circles(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, radius=kwargs['overlay'][olay][2].to(u.degree).value, **kwargs['overlay'][olay][3])
+                        fig.show_circles(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, radius=kwargs['overlay'][olay][2].to(__u__.degree).value, **kwargs['overlay'][olay][3])
                     else:
                         fig.show_markers(xw=kwargs['overlay'][olay][1].ra.degree, yw=kwargs['overlay'][olay][1].dec.degree, marker=kwargs['overlay'][olay][0], s=kwargs['overlay'][olay][2], **kwargs['overlay'][olay][3])
             
@@ -238,8 +239,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 fig.add_beam()
                 fig.beam.show()
                 fig.beam.set_corner(kwargs['beam_corner'])
-                fig.beam.set_frame(beam_frame)
-                fig.beam.set_color(beam_color)
+                fig.beam.set_frame(_beam_frame)
+                fig.beam.set_color(_beam_color)
             
         # add axis label and scale bar if bottom left plot
         if ( i == (nrows-1)*ncols ):
@@ -248,37 +249,37 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             fig.tick_labels.set_xformat(tick_label_xformat)
             fig.tick_labels.set_yformat(tick_label_yformat)
             fig.ticks.show()
-            fig.ticks.set_xspacing(ticks_xspacing.to(u.degree).value)
-            fig.ticks.set_yspacing(ticks_yspacing.to(u.degree).value)
+            fig.ticks.set_xspacing(ticks_xspacing.to(__u__.degree).value)
+            fig.ticks.set_yspacing(ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ticks_minor_frequency)
-            fig.ticks.set_color(ticks_color)
+            fig.ticks.set_color(_ticks_color)
 
     #       fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-                fig.add_scalebar(length=kwargs['scalebar_length'].to(u.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=scalebar_frame)
-                fig.scalebar.set_font(size=scalebar_fontsize)
-                fig.scalebar.set_linestyle(scalebar_linestyle)
-                fig.scalebar.set_linewidth(scalebar_linewidth)
-                fig.scalebar.set_color(scalebar_color)
+                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
+                fig.scalebar.set_font(size=_scalebar_fontsize)
+                fig.scalebar.set_linestyle(_scalebar_linestyle)
+                fig.scalebar.set_linewidth(_scalebar_linewidth)
+                fig.scalebar.set_color(_scalebar_color)
         
         # colorbar settings
         if 'colorbar_cmap' and 'colorbar_label' in kwargs:
-            ax1 = main_fig.add_axes([0.05+(ncols-1+0.05)*0.9/ncols, 0.05+0.5*0.9/nrows, 0.9*0.9/ncols, colorbar_width*0.9/nrows])
+            ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
             if 'vmin' and 'vmax' in kwargs:
-                colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
             else:
-                colorbar = mpl.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=mpl.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
-            colorbar.ax.tick_params(labelsize = colorbar_fontsize)
+                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
+            colorbar.ax.tick_params(labelsize = _colorbar_fontsize)
             colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
-            colorbar.set_label(kwargs['colorbar_label'], size = colorbar_fontsize)
+            colorbar.set_label(kwargs['colorbar_label'], size = _colorbar_fontsize)
         else:
-            print "--> you need to define both colorbar_location and colorbar_label to plot a colorbar"
+            print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
-        print "--> saved file as "+kwargs['out']
+        print("--> saved file as "+kwargs['out'])
     else:
         fig.save('grid_plot.png', dpi=300, transparent=True)
-        print "--> saved file as grid_plot.png"
+        print("--> saved file as grid_plot.png")
 
 ###################################################################################################
