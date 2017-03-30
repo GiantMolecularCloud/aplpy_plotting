@@ -134,8 +134,8 @@ def aplpy_plot(fitsfile, **kwargs):
             Can be accessed via
         import aplpy_plotting as ap
         ap.setting = ...
-        See the aplpy_plotting.py main file the exact setting names if you need to 
-        change them.
+        See the aplpy_plotting.py main file for the exact setting names if you need
+        to change them.
 
 
     example:
@@ -363,8 +363,8 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             Can be accessed via
         import aplpy_plotting as ap
         ap.setting = ...
-        See the aplpy_plotting.py main file the exact setting names if you need to 
-        change them.
+        See the aplpy_plotting.py main file for the exact setting names if you need
+        to change them.
 
 
     example:
@@ -594,8 +594,8 @@ def aplpy_plot_pv(fitspv, **kwargs):
             Can be accessed via
         import aplpy_plotting as ap
         ap.setting = ...
-        See the aplpy_plotting.py main file the exact setting names if you need to 
-        change them.
+        See the aplpy_plotting.py main file for the exact setting names if you need
+        to change them.
 
 
     example:
@@ -789,8 +789,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             Can be accessed via
         import aplpy_plotting as ap
         ap.setting = ...
-        See the aplpy_plotting.py main file the exact setting names if you need to 
-        change them.
+        See the aplpy_plotting.py main file for the exact setting names if you need
+        to change them.
 
 
     example:
