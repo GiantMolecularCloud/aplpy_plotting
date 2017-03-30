@@ -59,7 +59,7 @@ _ticks_color           = 'black'		# this setting overrules the matplotlibrc defa
 
 
 # define new viridis colormap with less dark blue
-viridis_cropped = __colors__.ListedColormap(__mpl__.cm.viridis(np.linspace(0.1,1.0,100)))
+viridis_cropped = __colors__.ListedColormap(__mpl__.cm.viridis(__np__.linspace(0.1,1.0,100)))
 
 
 ###################################################################################################
