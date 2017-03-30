@@ -35,11 +35,11 @@ __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
 # before calling the plot function. Global variables do exactly that.
 
 # settings that are dataset dependend, i.e. need to be changed for a new dataset
-tick_label_xformat = 'hh:mm:ss.ss'
-tick_label_yformat = 'dd:mm:ss.ss'
-ticks_xspacing = __Angle__('0 1 0', unit='hourangle')
-ticks_yspacing = 1.0*__u__.arcmin
-ticks_minor_frequency = 5
+global tick_label_xformat; tick_label_xformat = 'hh:mm:ss.ss'
+global tick_label_yformat; tick_label_yformat = 'dd:mm:ss.ss'
+global ticks_xspacing; ticks_xspacing = __Angle__('0 1 0', unit='hourangle')
+global ticks_yspacing; ticks_yspacing = 1.0*__u__.arcmin
+global ticks_minor_frequency; ticks_minor_frequency = 5
 
 
 
