@@ -12,8 +12,8 @@
 ###################################################################################################
 
 
-import __os__
-import __aplpy__
+import os as __os__
+import aplpy as __aplpy__
 import numpy as __np__
 from astropy import units as __u__
 from matplotlib import rc as __rc__

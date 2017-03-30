@@ -12,7 +12,7 @@
 ###################################################################################################
 
 
-import __aplpy__
+import aplpy as __aplpy__
 import numpy as __np__
 from astropy import units as __u__
 import matplotlib as __mpl__
