@@ -60,3 +60,12 @@ ticks_color           = 'black'		# this setting overrules the matplotlibrc defau
 
 # define new viridis colormap with less dark blue
 viridis_cropped = colors.ListedColormap(mpl.cm.viridis(np.linspace(0.1,1.0,100)))
+
+
+###################################################################################################
+
+# import plotting functions
+from .aplpy_plot import aplpy_plot
+from .aplpy_plot_pv import aplpy_plot_pv
+from .aplpy_channel_map import aplpy_channel_map
+from .aplpy_map_grid import aplpy_map_grid
