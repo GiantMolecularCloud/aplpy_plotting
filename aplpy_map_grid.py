@@ -165,7 +165,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 
     # convert to float for python 2 compatibility
     ncols_f = float(ncols)
-    nrows_f = flaot(nrows)
+    nrows_f = float(nrows)
 
     for i in __np__.arange(len(fitsimages)):
         
