@@ -46,7 +46,7 @@ global ticks_minor_frequency; ticks_minor_frequency = 5
 # fixed settings, i.e. settings that should be the same for each and every plot
 _velo_fontsize         = 10.0		# unit: point
 _colorbar_fontsize     = 10.0		# unit: point
-#_colorbar_width        = 0.15	    # relative to panel size
+_colorbar_width        = 0.15	    # relative to panel size
 _scalebar_frame        = False
 _scalebar_linestyle    = 'solid'		# or any other plt.plot linestyle
 _scalebar_linewidth    = 2			# unit: points

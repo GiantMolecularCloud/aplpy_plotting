@@ -166,7 +166,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
 
     # convert to float for python 2 compatibility
     ncols_f = float(ncols)
-    nrows_f = flaot(nrows)
+    nrows_f = float(nrows)
 
     for i in __np__.arange(nrows*ncols):
         
@@ -228,7 +228,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
             fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
-            fig.ticks.set_color(ap.ticks_color)
+            fig.ticks.set_color(ap._ticks_color)
             
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
@@ -248,7 +248,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
                 print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-                ax1 = main_fig.add_axes([0.05+(i%ncols_f)*0.9/ncols_f+0.05/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, colorbar_width*0.9/nrows_f])
+                ax1 = main_fig.add_axes([0.05+(i%ncols_f)*0.9/ncols_f+0.05/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
                 if 'stretch' in kwargs:
                     if (kwargs['stretch'] == 'linear'):
                         colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
