@@ -217,6 +217,11 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                         fig.show_contour(data=kwargs['contour'][1], dimensions=[0,1], slices=chn_slice, levels=kwargs['contour'][2], colors=kwargs['contour'][3])
                     else:
                         print("--> wrong mask type specification")
+                elif len(kwargs['contour']) == 5:
+                    if kwargs['contour'][0] == 'pixelmask':
+                        fig.show_contour(data=kwargs['contour'][1], levels=kwargs['contour'][2], colors=kwargs['contour'][3], **kwargs['contour'][4])
+                    elif kwargs['contour'][0] == 'cubemask':
+                        fig.show_contour(data=kwargs['contour'][1], dimensions=[0,1], slices=chn_slice, levels=kwargs['contour'][2], colors=kwargs['contour'][3], **kwargs['contour'][4])
                 else:
                     print("--> wrong number or format of contour parameters. not plotting contours")
             
@@ -282,7 +287,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
 
 #           fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
+                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=ap._scalebar_frame)
                 fig.scalebar.set_font(size=ap._scalebar_fontsize)
                 fig.scalebar.set_linestyle(ap._scalebar_linestyle)
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
