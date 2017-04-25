@@ -65,11 +65,10 @@ def aplpy_plot_pv(fitspv, **kwargs):
                     Linear and log scaling are fully implemented, other scaling can
                     cause errors when unusual argument combinations are chosen.
         
-        recenter    Center the image on this location and set image width/height.
-                    You either have to specify radius or width and height.
-                    Must be an array containing an astropy.SkyCoord object plus one 
-                    or two angular distances: [SkyCoord(...), 1*u.arcmin]
-                    
+        recenter    Center the image on this location and set image width and height.
+                    Needs to be given with the correct units, i.e. km/s if the 
+                    image is defined as km/s. No automatic rescaling.
+
         contour     List of contour elements.
                     Each contour element must be a list of 'image file', list of 
                     contour levels and list of colors for each contour. If only one
@@ -79,6 +78,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
                             Can be, e.g. 'bottom', 'right', ...
         colorbar_label      Can be specified only when colorbar_location is given.
                             String containing the label.
+
+        label_text          List of labels to label to individual panels. Default is
+                            to get a label from the file name without extension and
+                            path.
+        label_kwargs        Keyword arguments to format the label. All plt.text
+                            kwargs are allowed, especially bbox=props can be used.
+                            See example below.
     
     
     General style settings
@@ -95,17 +101,18 @@ def aplpy_plot_pv(fitspv, **kwargs):
     example:
     
     aplpy_plot_pv('abc.fits', 
-                  figsize = (8.27, 11.69),
-                  vmin    = 0,
-                  vmax    = 100,
-                  stretch = 'linear',
-                  cmap    = ap.viridis_cropped,
-                  contour = [['xyz.fits', [1,2,3], 'black']], 
+                  figsize  = (8.27, 11.69),
+                  vmin     = 0,
+                  vmax     = 100,
+                  stretch  = 'linear',
+                  cmap     = ap.viridis_cropped,
+                  recenter = [0, 0, 5, 100],
+                  contour  = [['xyz.fits', [1,2,3], 'black']], 
                   colorbar_location = 'right', 
                   colorbar_label = 'intensity [Jy\,beam$^{-1}$]', 
-                  xlabel = 'offset [arcsec]', 
-                  ylabel = 'velocity [km\,s$^{-1}$', 
-                  out = 'abc.png'
+                  xlabel   = 'offset [arcsec]', 
+                  ylabel   = 'velocity [km\,s$^{-1}$', 
+                  out      = 'abc.png'
                   )
     """
     
@@ -132,7 +139,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
         
     # recenter image
     if 'recenter' in kwargs:
-        print("--> recenter not implemented yet")
+        fig.recenter(kwargs['recenter'][0], kwargs['recenter'][1], width=kwargs['recenter'][2], height=kwargs['recenter'][3])
     
     # contours?
     if 'contour' in kwargs:
@@ -173,6 +180,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
     else:
         print("--> you need to give both labels")
 
+    # data set overlay
+    if 'label_text' in kwargs:
+        fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+        if 'label_kwargs' in kwargs:
+            fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+    
+    # write plot to disk
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
         print("--> saved file as "+kwargs['out'])
