@@ -182,7 +182,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
 
     # data set overlay
     if 'label_text' in kwargs:
-        fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+        fig.add_label(0.1, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
         if 'label_kwargs' in kwargs:
             fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
     
