@@ -218,7 +218,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
             fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
-            fig.ticks.set_color(ap.ticks_color)
+            fig.ticks.set_color(ap._ticks_color)
             
             # data set overlay
             if 'label_text' in kwargs:
@@ -240,8 +240,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 fig.add_beam()
                 fig.beam.show()
                 fig.beam.set_corner(kwargs['beam_corner'])
-                fig.beam.set_frame(_beam_frame)
-                fig.beam.set_color(_beam_color)
+                fig.beam.set_frame(ap._beam_frame)
+                fig.beam.set_color(ap._beam_color)
             
         # add axis label and scale bar if bottom left plot
         if ( i == (nrows-1)*ncols ):
