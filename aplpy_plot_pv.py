@@ -160,6 +160,8 @@ def aplpy_plot_pv(fitspv, **kwargs):
             if (kwargs['stretch'] == 'log'):
                 log_ticks = [float('{:.2f}'.format(round(x,int(-1*__np__.log10(kwargs['vmin']))))) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=10, endpoint=True)]
                 fig.colorbar.set_ticks(log_ticks)
+        fig.colorbar.set_font(size=ap._colorbar_fontsize)
+        fig.colorbar.set_axis_label_font(size=ap._colorbar_fontsize)
 
     # scale bar
     # not possible with CTYPE='OFFSET'

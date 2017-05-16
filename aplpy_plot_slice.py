@@ -185,6 +185,8 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
             if (kwargs['stretch'] == 'log'):
                 log_ticks = [float('{:.2f}'.format(round(x,int(-1*__np__.log10(kwargs['vmin']))))) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=10, endpoint=True)]
                 fig.colorbar.set_ticks(log_ticks)
+        fig.colorbar.set_font(size=ap._colorbar_fontsize)
+        fig.colorbar.set_axis_label_font(size=ap._colorbar_fontsize)
 
     # scale bar
     if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
@@ -204,10 +206,22 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
     
     # data set overlay
     if 'label_text' in kwargs:
-        fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
-        if 'label_kwargs' in kwargs:
-            fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
-    
+        if isinstance(kwargs['label_text'], str):
+            if 'label_kwargs' in kwargs:
+                fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+            else:
+                fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+        elif isinstance(kwargs['label_text'], list):
+            if (len(kwargs['label_text']) == 3):
+                if 'label_kwargs' in kwargs:
+                    fig.add_label(kwargs['label_text'][0], kwargs['label_text'][1], kwargs['label_text'][2].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+                else:
+                    fig.add_label(kwargs['label_text'][0], kwargs['label_text'][1], kwargs['label_text'][2].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+            else:
+                raise ValueError('Need xpos, ypos and string to plot label.')
+        else:
+            raise TypeError('Unknown type for label_text. Either string or list with three entries are supported.')
+
     if 'overlay' in kwargs:
         for olay in __np__.arange(len(kwargs['overlay'])):
             if (kwargs['overlay'][olay][0] == 'circle'):
@@ -219,11 +233,13 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
     fig.tick_labels.show()
     fig.tick_labels.set_xformat(ap.tick_label_xformat)
     fig.tick_labels.set_yformat(ap.tick_label_yformat)
+    fig.tick_labels.set_font(size=ap._tick_label_fontsize)
     fig.ticks.show()
     fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
     fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
     fig.ticks.set_color(ap._ticks_color)
+    fig.axis_labels.set_font(size=ap._tick_label_fontsize)
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)

@@ -48,13 +48,16 @@ _velo_fontsize         = 10.0		# unit: point
 _colorbar_fontsize     = 10.0		# unit: point
 _colorbar_width        = 0.15	    # relative to panel size
 _scalebar_frame        = False
-_scalebar_linestyle    = 'solid'		# or any other plt.plot linestyle
+_scalebar_linestyle    = 'solid'	# or any other plt.plot linestyle
 _scalebar_linewidth    = 2			# unit: points
 _scalebar_color        = 'red'		# any named color or mpl.color instance
 _scalebar_fontsize     = 10.0    	# only used in channel map to prevent bar sliding over map
 _beam_frame            = False
 _beam_color            = 'black'
-_ticks_color           = 'black'		# this setting overrules the matplotlibrc defaults
+_ticks_color           = 'black'	# this setting overrules the matplotlibrc defaults
+_tick_label_fontsize   = 12         # unit: point
+_axis_label_fontsize   = 12         # unit: point
+_props                 = {'boxstyle': "round", 'facecolor': "w", 'edgecolor': "black", 'linewidth': 0.5, 'alpha': 0.8}
 
 
 
@@ -69,3 +72,4 @@ from .aplpy_plot import aplpy_plot
 from .aplpy_plot_pv import aplpy_plot_pv
 from .aplpy_channel_map import aplpy_channel_map
 from .aplpy_map_grid import aplpy_map_grid
+from .aplpy_plot_slice import aplpy_plot_slice

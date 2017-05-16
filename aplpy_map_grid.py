@@ -249,11 +249,13 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             fig.tick_labels.show()
             fig.tick_labels.set_xformat(ap.tick_label_xformat)
             fig.tick_labels.set_yformat(ap.tick_label_yformat)
+            fig.tick_labels.set_font(size=ap._tick_label_fontsize)
             fig.ticks.show()
             fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
             fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
             fig.ticks.set_color(ap._ticks_color)
+            fig.axis_labels.set_font(size=ap._tick_label_fontsize)
 
     #       fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
