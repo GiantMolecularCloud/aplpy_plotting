@@ -208,6 +208,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 for cont_i in __np__.arange(len(kwargs['contour'])):
                     if len(kwargs['contour'][cont_i]) == 3:
                         fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
+                    if len(kwargs['contour'][cont_i]) == 4:
+                        fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][cont_i][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3])
                     else:
                         print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
             
@@ -259,7 +261,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 
     #       fig.remove_scalebar()
             if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
-                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=_scalebar_frame)
+                fig.add_scalebar(length=kwargs['scalebar_length'].to(__u__.degree).value, label=kwargs['scalebar_label'], corner=kwargs['scalebar_corner'], frame=ap._scalebar_frame)
                 fig.scalebar.set_font(size=ap._scalebar_fontsize)
                 fig.scalebar.set_linestyle(ap._scalebar_linestyle)
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
