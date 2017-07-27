@@ -187,6 +187,7 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
                 fig.colorbar.set_ticks(log_ticks)
         fig.colorbar.set_font(size=ap._colorbar_fontsize)
         fig.colorbar.set_axis_label_font(size=ap._colorbar_fontsize)
+        fig.colorbar.set_frame_color(ap._frame_color)
 
     # scale bar
     if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
@@ -239,6 +240,7 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
     fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
     fig.ticks.set_color(ap._ticks_color)
+    fig.frame.set_color(ap._frame_color)
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
 
     if 'out' in kwargs:

@@ -236,6 +236,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
             fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
             fig.ticks.set_color(ap._ticks_color)
+            fig.frame.set_color(ap._frame_color)
             
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
@@ -260,18 +261,24 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                     if (kwargs['stretch'] == 'linear'):
                         colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
                         colorbar.set_label(kwargs['colorbar_label'])
+                        colorbar.outline.set_edgecolor(ap._frame_color)
+                        #colorbar.dividers.set_color(ap._frame_color)
                     elif (kwargs['stretch'] == 'log'):
                         log_ticks = [float('{:.2f}'.format(x)) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=5, endpoint=True)]
                         colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='horizontal')
                         colorbar.set_label(kwargs['colorbar_label'])
                         colorbar.set_ticks(log_ticks)
                         colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
+                        colorbar.outline.set_edgecolor(ap._frame_color)
+                        #colorbar.dividers.set_color(ap._frame_color)
                     else:
                         print("--> only linear and log stretch supported!")
                 else:
                     colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
                     colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
                     colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
+                    colorbar.outline.set_edgecolor(ap._frame_color)
+                    #colorbar.dividers.set_color(ap._frame_color)
             else:
                 print("--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar")
             

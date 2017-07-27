@@ -173,6 +173,12 @@ def aplpy_plot(fitsfile, **kwargs):
                 if isinstance(kwargs['clabel'],dict):
                     fig._layers['contour_set_'+str(cont_i+1)].clabel(**kwargs['clabel'])
     
+    # regions
+    if 'regions' in kwargs:
+        # add a test if pyregions is installed
+        for reg_i in __np__.arange(len(kwargs['regions'])):
+            fig.show_regions(kwargs['regions'][reg_i])
+    
     # colorbar settings
     if 'colorbar_location' in kwargs:
         fig.add_colorbar()
@@ -186,6 +192,7 @@ def aplpy_plot(fitsfile, **kwargs):
                 fig.colorbar.set_ticks(log_ticks)
         fig.colorbar.set_font(size=ap._colorbar_fontsize)
         fig.colorbar.set_axis_label_font(size=ap._colorbar_fontsize)
+        fig.colorbar.set_frame_color(ap._frame_color)
 
     # scale bar
     if 'scalebar_length' and 'scalebar_label' and 'scalebar_corner' in kwargs:
@@ -233,11 +240,14 @@ def aplpy_plot(fitsfile, **kwargs):
     fig.tick_labels.set_xformat(ap.tick_label_xformat)
     fig.tick_labels.set_yformat(ap.tick_label_yformat)
     fig.tick_labels.set_font(size=ap._tick_label_fontsize)
+    #fig.tick_labels.hide_x()
+    #fig.tick_labels.hide_y()
     fig.ticks.show()
     fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
     fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
     fig.ticks.set_color(ap._ticks_color)
+    fig.frame.set_color(ap._frame_color)
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
 
     if 'out' in kwargs:

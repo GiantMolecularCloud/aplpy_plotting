@@ -55,6 +55,7 @@ _scalebar_fontsize     = 10.0    	# only used in channel map to prevent bar slid
 _beam_frame            = False
 _beam_color            = 'black'
 _ticks_color           = 'black'	# this setting overrules the matplotlibrc defaults
+_frame_color           = 'black'
 _tick_label_fontsize   = 12         # unit: point
 _axis_label_fontsize   = 12         # unit: point
 _props                 = {'boxstyle': "round", 'facecolor': "w", 'edgecolor': "black", 'linewidth': 0.5, 'alpha': 0.8}

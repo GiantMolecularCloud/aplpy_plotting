@@ -162,6 +162,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
                 fig.colorbar.set_ticks(log_ticks)
         fig.colorbar.set_font(size=ap._colorbar_fontsize)
         fig.colorbar.set_axis_label_font(size=ap._colorbar_fontsize)
+        fig.colorbar.set_frame_color(ap._frame_color)
 
     # scale bar
     # not possible with CTYPE='OFFSET'
@@ -175,6 +176,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
 #   fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
     fig.ticks.set_color(ap._ticks_color)
+    fig.frame.set_color(ap._frame_color)
     
     # axis labels
     if 'xlabel' and 'ylabel' in kwargs:
