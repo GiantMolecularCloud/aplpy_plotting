@@ -85,6 +85,10 @@ def aplpy_plot_pv(fitspv, **kwargs):
         label_kwargs        Keyword arguments to format the label. All plt.text
                             kwargs are allowed, especially bbox=props can be used.
                             See example below.
+        legend              Show a legend of the contours. Must be either True to show
+                            the filenames as labels or a list of label text.
+        legend_kwargs       Further kwargs to customize the legend. E.g. loc, or 
+                            bbox_to_anchor.
     
     
     General style settings
@@ -112,6 +116,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
                   colorbar_label = 'intensity [Jy\,beam$^{-1}$]', 
                   xlabel   = 'offset [arcsec]', 
                   ylabel   = 'velocity [km\,s$^{-1}$', 
+                  legend   = True,
                   out      = 'abc.png'
                   )
     """
@@ -146,6 +151,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
         for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
+                if 'legend' in kwargs:
+                    if (kwargs['legend'] == True):
+                        fig._ax1.collections[cont_i*len(kwargs['contour'][cont_i][1])].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
+                    elif (isinstance(kwargs['legend'], (list,tuple))):
+                        fig._ax1.collections[cont_i*len(kwargs['contour'][cont_i][1])].set_label(kwargs['legend'][cont_i])
+                    else:
+                        print("--> wrong format for legend: either True or list of names for each contour.")
             else:
                 print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
 
@@ -189,6 +201,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
         fig.add_label(0.15, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
         if 'label_kwargs' in kwargs:
             fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+    
+    # add legend
+    if 'legend' in kwargs:
+        if 'legend_kwargs' in kwargs:
+            fig._ax1.legend(**kwargs['legend_kwargs'])
+        else:
+            fig._ax1.legend(loc=3, bbox_to_anchor=(0.,1.02,1.,0.1), ncol=2, mode='expand', borderaxespad=0., fontsize=ap._colorbar_fontsize)
     
     # write plot to disk
     if 'out' in kwargs:
