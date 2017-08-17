@@ -148,16 +148,18 @@ def aplpy_plot_pv(fitspv, **kwargs):
     
     # contours?
     if 'contour' in kwargs:
+        contournum = 0  # counting variable for number of total contours plotted
         for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
                 if 'legend' in kwargs:
                     if (kwargs['legend'] == True):
-                        fig._ax1.collections[cont_i*len(kwargs['contour'][cont_i][1])].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
+                        fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
                     elif (isinstance(kwargs['legend'], (list,tuple))):
-                        fig._ax1.collections[cont_i*len(kwargs['contour'][cont_i][1])].set_label(kwargs['legend'][cont_i])
+                        fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
                     else:
                         print("--> wrong format for legend: either True or list of names for each contour.")
+                contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
             else:
                 print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
 
@@ -204,6 +206,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
     
     # add legend
     if 'legend' in kwargs:
+        adjbbox = False
         if 'legend_kwargs' in kwargs:
             fig._ax1.legend(**kwargs['legend_kwargs'])
         else:
@@ -211,10 +214,10 @@ def aplpy_plot_pv(fitspv, **kwargs):
     
     # write plot to disk
     if 'out' in kwargs:
-        fig.save(kwargs['out'], dpi=300, transparent=True)
+        fig.save(kwargs['out'], dpi=300, transparent=True, adjust_bbox=adjbbox)
         print("--> saved file as "+kwargs['out'])
     else:
-        fig.save(__os__.path.splitext(fitspv)[0]+'.png', dpi=300, transparent=True)
+        fig.save(__os__.path.splitext(fitspv)[0]+'.png', dpi=300, transparent=True, adjust_bbox=adjbbox)
         print("--> saved plot as "+__os__.path.splitext(fitspv)[0]+'.png')
 
 
