@@ -73,6 +73,10 @@ def aplpy_plot_pv(fitspv, **kwargs):
                     Each contour element must be a list of 'image file', list of 
                     contour levels and list of colors for each contour. If only one
                     color is given, it will be used for all contours.
+        legend      Add a legend that lists the contour objects. The default is a
+                    legend with two columns over the image listing the countour file
+                    names.
+        legend_kwargs       Specify the legend details as in ax.legend().
                     
         colorbar_location   As the name says.
                             Can be, e.g. 'bottom', 'right', ...

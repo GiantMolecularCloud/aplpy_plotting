@@ -71,6 +71,10 @@ def aplpy_plot(fitsfile, **kwargs):
                     Either set to True to use the matplotlib defaults or give a 
                     dictionary with allowed axes.clabel arguments.
                     Use clabel={'fmt': '%i'} to get labels without trailing zeros.
+        legend      Add a legend that lists the contour objects. The default is a
+                    legend with two columns over the image listing the countour file
+                    names.
+        legend_kwargs       Specify the legend details as in ax.legend().
                     
         colorbar_location   As the name says.
                             Can be, e.g. 'bottom', 'right', ...
@@ -160,11 +164,28 @@ def aplpy_plot(fitsfile, **kwargs):
     
     # contours
     if 'contour' in kwargs:
+        contournum = 0  # counting variable for number of total contours plotted
         for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
-            if len(kwargs['contour'][cont_i]) == 4:
+                if 'legend' in kwargs:
+                    if (kwargs['legend'] == True):
+                        fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
+                    elif (isinstance(kwargs['legend'], (list,tuple))):
+                        fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
+                    else:
+                        print("--> wrong format for legend: either True or list of names for each contour.")
+                    contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
+            elif len(kwargs['contour'][cont_i]) == 4:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3])
+                if 'legend' in kwargs:
+                    if (kwargs['legend'] == True):
+                        fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
+                    elif (isinstance(kwargs['legend'], (list,tuple))):
+                        fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
+                    else:
+                        print("--> wrong format for legend: either True or list of names for each contour.")
+                    contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
             else:
                 print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
             if 'clabel' in kwargs:
@@ -249,12 +270,20 @@ def aplpy_plot(fitsfile, **kwargs):
     fig.ticks.set_color(ap._ticks_color)
     fig.frame.set_color(ap._frame_color)
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
+    
+    # add legend
+    if 'legend' in kwargs:
+        adjbbox = False
+        if 'legend_kwargs' in kwargs:
+            fig._ax1.legend(**kwargs['legend_kwargs'])
+        else:
+            fig._ax1.legend(loc=3, bbox_to_anchor=(0.,1.02,1.,0.1), ncol=2, mode='expand', borderaxespad=0., fontsize=ap._colorbar_fontsize)
 
     if 'out' in kwargs:
-        fig.save(kwargs['out'], dpi=300, transparent=True)
+        fig.save(kwargs['out'], dpi=300, transparent=True, adjust_bbox=adjbbox)
         print("--> saved file as "+kwargs['out'])
     else:
-        fig.save(__os__.path.splitext(fitsfile)[0]+'.png', dpi=300, transparent=True)
+        fig.save(__os__.path.splitext(fitsfile)[0]+'.png', dpi=300, transparent=True, adjust_bbox=adjbbox)
         print("--> saved plot as "+__os__.path.splitext(fitsfile)[0]+'.png')
 
 
