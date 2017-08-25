@@ -272,6 +272,7 @@ def aplpy_plot(fitsfile, **kwargs):
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
     
     # add legend
+    adjbbox = True
     if 'legend' in kwargs:
         adjbbox = False
         if 'legend_kwargs' in kwargs:
