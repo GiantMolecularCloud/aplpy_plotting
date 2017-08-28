@@ -145,10 +145,13 @@ def aplpy_plot_pv(fitspv, **kwargs):
             fig.show_colorscale(vmin=kwargs['vmax'], vmax=kwargs['vmax'], aspect='auto')
     else:
         fig.show_colorscale(aspect='auto')
-        
+    
     # recenter image
     if 'recenter' in kwargs:
-        fig.recenter(kwargs['recenter'][0], kwargs['recenter'][1], width=kwargs['recenter'][2], height=kwargs['recenter'][3])
+        if (len(kwargs['recenter']) == 4):
+            fig.recenter(kwargs['recenter'][0].value, kwargs['recenter'][1].value, width=kwargs['recenter'][2].value, height=kwargs['recenter'][3].value)
+        else:
+            print("--> specify center (x), center (y), width and height as astropy.units object. not recentering")
     
     # contours?
     if 'contour' in kwargs:
@@ -187,11 +190,7 @@ def aplpy_plot_pv(fitspv, **kwargs):
 
     # ticks + labels
     fig.tick_labels.show()
-#   fig.tick_labels.set_xformat(ap.tick_label_xformat_pv)
-#   fig.tick_labels.set_yformat(ap.tick_label_yformat_pv)
     fig.ticks.show()
-#   fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
-#   fig.ticks.set_yspacing(ap.ticks_yspacing.to(__u__.degree).value)
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
     fig.ticks.set_color(ap._ticks_color)
     fig.frame.set_color(ap._frame_color)
@@ -204,9 +203,10 @@ def aplpy_plot_pv(fitspv, **kwargs):
 
     # data set overlay
     if 'label_text' in kwargs:
-        fig.add_label(0.15, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
         if 'label_kwargs' in kwargs:
-            fig.add_label(0.5, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+            fig.add_label(0.2, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+        else:
+            fig.add_label(0.2, 0.9, kwargs['label_text'].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
     
     # add legend
     adjbbox = True

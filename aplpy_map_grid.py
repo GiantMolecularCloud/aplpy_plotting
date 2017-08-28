@@ -250,8 +250,8 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         if ( i == (nrows-1)*ncols ):
             fig.axis_labels.show()
             fig.tick_labels.show()
-            fig.tick_labels.set_xformat(ap.tick_label_xformat)
-            fig.tick_labels.set_yformat(ap.tick_label_yformat)
+#            fig.tick_labels.set_xformat(ap.tick_label_xformat)
+#            fig.tick_labels.set_yformat(ap.tick_label_yformat)
             fig.tick_labels.set_font(size=ap._tick_label_fontsize)
             fig.ticks.show()
             fig.ticks.set_xspacing(ap.ticks_xspacing.to(__u__.degree).value)
@@ -273,15 +273,15 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
             if 'vmin' and 'vmax' in kwargs:
                 colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
-                colorbar.outline.set_color(ap._frame_color)
+                colorbar.outline.set_edgecolor(ap._frame_color)
                 colorbar.dividers.set_color(ap._frame_color)
             else:
                 colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
             colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
             colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
             colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
-            colorbar.outline.set_color(ap._frame_color)
-            colorbar.dividers.set_color(ap._frame_color)
+            colorbar.outline.set_edgecolor(ap._frame_color)
+#            colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
         else:
             print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
     

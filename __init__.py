@@ -74,3 +74,5 @@ from .aplpy_plot_pv import aplpy_plot_pv
 from .aplpy_channel_map import aplpy_channel_map
 from .aplpy_map_grid import aplpy_map_grid
 from .aplpy_plot_slice import aplpy_plot_slice
+from .aplpy_pv_grid import aplpy_pv_grid
+from .correct_velo_info import correct_velo_info
