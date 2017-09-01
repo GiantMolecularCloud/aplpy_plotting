@@ -117,6 +117,15 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
         
         beam_corner Plot a beam ellipse as given in the fits header in this corner 
                     of the plot. Does not have to be a corner. 'bottom' also works.
+                            
+        execute_code        This option allows to pass arbitrary code that is executed
+                            just before saving the figure and can be used to access
+                            aplpy functionality that is not mapped by aplpy_plotting.
+                            The code must be given in a list of strings. Note that the
+                            correct namespaces need to be given, e.g. access numpy with
+                            __np__ instead of np. The figure objects are called fig, or
+                            main_fig in plots with multiple figures. Example:
+                            execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
     
     
     General style settings
@@ -303,6 +312,14 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                 fig.scalebar.set_linestyle(ap._scalebar_linestyle)
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
                 fig.scalebar.set_color(ap._scalebar_color)
+    
+    # execute additional code passed by the user
+    if 'execute_code' in kwargs:
+        if (isinstance(kwargs['execute_code'], (list,tuple))):
+            for codes in kwargs['execute_code']:
+                exec(codes)
+        else:
+            print("Code to execute must be given in a list of strings")
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)

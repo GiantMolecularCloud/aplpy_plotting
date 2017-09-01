@@ -93,6 +93,15 @@ def aplpy_plot_pv(fitspv, **kwargs):
                             the filenames as labels or a list of label text.
         legend_kwargs       Further kwargs to customize the legend. E.g. loc, or 
                             bbox_to_anchor.
+                            
+        execute_code        This option allows to pass arbitrary code that is executed
+                            just before saving the figure and can be used to access
+                            aplpy functionality that is not mapped by aplpy_plotting.
+                            The code must be given in a list of strings. Note that the
+                            correct namespaces need to be given, e.g. access numpy with
+                            __np__ instead of np. The figure objects are called fig, or
+                            main_fig in plots with multiple figures. Example:
+                            execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
     
     
     General style settings
@@ -216,6 +225,14 @@ def aplpy_plot_pv(fitspv, **kwargs):
             fig._ax1.legend(**kwargs['legend_kwargs'])
         else:
             fig._ax1.legend(loc=3, bbox_to_anchor=(0.,1.02,1.,0.1), ncol=2, mode='expand', borderaxespad=0., fontsize=ap._colorbar_fontsize)
+    
+    # execute additional code passed by the user
+    if 'execute_code' in kwargs:
+        if (isinstance(kwargs['execute_code'], (list,tuple))):
+            for codes in kwargs['execute_code']:
+                exec(codes)
+        else:
+            print("Code to execute must be given in a list of strings")
     
     # write plot to disk
     if 'out' in kwargs:

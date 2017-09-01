@@ -94,6 +94,15 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
                     astropy.SkyCoord object specifying the position, size as 
                     angular astropy.unit and further plt.scatter kwargs (can be 
                     empty).
+                            
+        execute_code        This option allows to pass arbitrary code that is executed
+                            just before saving the figure and can be used to access
+                            aplpy functionality that is not mapped by aplpy_plotting.
+                            The code must be given in a list of strings. Note that the
+                            correct namespaces need to be given, e.g. access numpy with
+                            __np__ instead of np. The figure objects are called fig, or
+                            main_fig in plots with multiple figures. Example:
+                            execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
 
     General style settings
         Settings that do not have to be changed for each plot but maybe once per 
@@ -242,6 +251,14 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
     fig.ticks.set_color(ap._ticks_color)
     fig.frame.set_color(ap._frame_color)
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
+
+    # execute additional code passed by the user
+    if 'execute_code' in kwargs:
+        if (isinstance(kwargs['execute_code'], (list,tuple))):
+            for codes in kwargs['execute_code']:
+                exec(codes)
+        else:
+            print("Code to execute must be given in a list of strings")
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)

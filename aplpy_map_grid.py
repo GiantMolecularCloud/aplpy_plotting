@@ -116,6 +116,15 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                     astropy.SkyCoord object specifying the position, size as 
                     angular astropy.unit and further plt.scatter kwargs (can be 
                     empty).
+                            
+        execute_code        This option allows to pass arbitrary code that is executed
+                            just before saving the figure and can be used to access
+                            aplpy functionality that is not mapped by aplpy_plotting.
+                            The code must be given in a list of strings. Note that the
+                            correct namespaces need to be given, e.g. access numpy with
+                            __np__ instead of np. The figure objects are called fig, or
+                            main_fig in plots with multiple figures. Example:
+                            execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
     
     
     General style settings
@@ -284,6 +293,14 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 #            colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
         else:
             print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
+    
+    # execute additional code passed by the user
+    if 'execute_code' in kwargs:
+        if (isinstance(kwargs['execute_code'], (list,tuple))):
+            for codes in kwargs['execute_code']:
+                exec(codes)
+        else:
+            print("Code to execute must be given in a list of strings")
     
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
