@@ -5,7 +5,7 @@
 # pV diagrams, ... in a quality that (hopefully) allows publishing. #
 #####################################################################
 
-# I know that I shouldn't use dozens of if-else statements but rather try-except to get correct 
+# I know that I shouldn't use dozens of if-else statements but rather try-except to get correct
 # handling of exceptions. When I started wrinting this code I didn't know what exception could
 # do for my case and right now I don't have time to change this script.
 
@@ -35,68 +35,70 @@ def aplpy_plot(fitsfile, **kwargs):
 
     Mandatory unnamed arguments:
         fitsfile    Path and file name of the fits image to be plotted
-        
+
 
     Optional arguments:
         out         Path and file name of the created plot.
                     If not specified, the plot will be saved where the input image
                     is located. Default format: png
-        
+
+        figsize     Fiugre size as tupel in inches. No default.
+
         cmap        Colormap to plot the image.
                     If not specified, the matplotlib default will be used, usually
                     this is viridis.
-                    Every named matplotlib colormap can be used or any matplotlib 
+                    Every named matplotlib colormap can be used or any matplotlib
                     colormap object.
                     For grayscale use cmap='grayscale'
-                    
+
         vmin        Minimum value for colormap normalization.
         vmax        Maximum value for colormap normalization.
-        
+
         stretch     Colormap strech, e.g. 'linear', 'log', 'sqrt', 'arcsinh'.
                     Linear and log scaling are fully implemented, other scaling can
                     cause errors when unusual argument combinations are chosen.
-        
+
         invert      Invert the colormap if True.
-        
+
         recenter    Center the image on this location and set image width/height.
                     You either have to specify radius or width and height.
-                    Must be an array containing an astropy.SkyCoord object plus one 
+                    Must be an array containing an astropy.SkyCoord object plus one
                     or two angular distances: [SkyCoord(...), 1*u.arcmin]
-                    
+
         contour     List of contour elements.
-                    Each contour element must be a list of 'image file', list of 
+                    Each contour element must be a list of 'image file', list of
                     contour levels and list of colors for each contour. If only one
                     color is given, it will be used for all contours.
         clabel      Draw labels on the contours? Needs contours to be present.
-                    Either set to True to use the matplotlib defaults or give a 
+                    Either set to True to use the matplotlib defaults or give a
                     dictionary with allowed axes.clabel arguments.
                     Use clabel={'fmt': '%i'} to get labels without trailing zeros.
         legend      Add a legend that lists the contour objects. The default is a
                     legend with two columns over the image listing the countour file
                     names.
         legend_kwargs       Specify the legend details as in ax.legend().
-                    
+
         colorbar_location   As the name says.
                             Can be, e.g. 'bottom', 'right', ...
         colorbar_label      Can be specified only when colorbar_location is given.
                             String containing the label.
-                            
-        scalebar_length     As the name says. Must be an angular astropy.units 
+
+        scalebar_length     As the name says. Must be an angular astropy.units
                             object, e.g. 10.0*u.arcmin
-        scalebar_label      String containing the label to be plotted below the 
+        scalebar_label      String containing the label to be plotted below the
                             scalebar.
         scalebar_corner     Where should the scalebar and label be plotted?
                             E.g. 'bottom left'
-        
-        beam_corner Plot a beam ellipse as given in the fits header in this corner 
+
+        beam_corner Plot a beam ellipse as given in the fits header in this corner
                     of the plot. Does not have to be a corner. 'bottom' also works.
-        
+
         overlay     List of overlay elements.
-                    Each overlay element is a list of shape (plt.scatter type), 
-                    astropy.SkyCoord object specifying the position, size as 
-                    angular astropy.unit and further plt.scatter kwargs (can be 
+                    Each overlay element is a list of shape (plt.scatter type),
+                    astropy.SkyCoord object specifying the position, size as
+                    angular astropy.unit and further plt.scatter kwargs (can be
                     empty).
-                            
+
         execute_code        This option allows to pass arbitrary code that is executed
                             just before saving the figure and can be used to access
                             aplpy functionality that is not mapped by aplpy_plotting.
@@ -107,8 +109,8 @@ def aplpy_plot(fitsfile, **kwargs):
                             execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
 
     General style settings
-        Settings that do not have to be changed for each plot but maybe once per 
-        script or once per project. Often used ones are tick_label_xformat, 
+        Settings that do not have to be changed for each plot but maybe once per
+        script or once per project. Often used ones are tick_label_xformat,
         ticks_xspacing and the corresponding settings for y.
             Can be accessed via
         import aplpy_plotting as ap
@@ -119,29 +121,33 @@ def aplpy_plot(fitsfile, **kwargs):
 
     example:
 
-    aplpy_plot('abc.fits', 
-            out  = 'abc.png',       
-            cmap = 'jet', 
-            vmin = 0, 
-            vmax = 1, 
-            stretch  = 'linear', 
-            recenter = [SkyCoord('01h23m45.6s 12d34m45.6s'), 1.0*u.armin], 
-            contour  = ['contour.fits', [1,2,3], ['white', 'grey', 'black']], 
-            colorbar_location = 'right', 
-            colorbar_label  = 'Jy/beam', 
-            scalebar_length = 1.0, 
-            scalebar_label  = 'string', 
-            scalebar_corner = 'bottom', 
+    aplpy_plot('abc.fits',
+            out  = 'abc.png',
+            cmap = 'jet',
+            vmin = 0,
+            vmax = 1,
+            stretch  = 'linear',
+            recenter = [SkyCoord('01h23m45.6s 12d34m45.6s'), 1.0*u.armin],
+            contour  = ['contour.fits', [1,2,3], ['white', 'grey', 'black']],
+            colorbar_location = 'right',
+            colorbar_label  = 'Jy/beam',
+            scalebar_length = 1.0,
+            scalebar_label  = 'string',
+            scalebar_corner = 'bottom',
             beam_corner     = 'bottom left',
             overlay  = [['circle', SkyCoord('01h23m45.6s 12d34m45.6s'), 1.0*u.arcmin, {'linewidth': 1.0}]]
             )
     """
 
-    
+
     print("--> plotting map "+fitsfile)
-    
-    fig = __aplpy__.FITSFigure(fitsfile)
-    
+
+    if 'figsize' in kwargs:
+        main_figsize = kwargs['figsize']
+        fig = __aplpy__.FITSfigure(fitsfile, figsize=main_figsize)
+    else:
+        fig = __aplpy__.FITSFigure(fitsfile)
+
     if 'cmap' in kwargs:
         if kwargs['cmap'] == 'grayscale':
             fig.show_grayscale()
@@ -161,7 +167,7 @@ def aplpy_plot(fitsfile, **kwargs):
                         fig.show_colorscale(cmap=kwargs['cmap'], vmin=kwargs['vmin'], vmax=kwargs['vmax'], stretch=kwargs['stretch'], invert=kwargs['invert'])
     else:
         fig.show_colorscale()
-    
+
     # recenter image
     if 'recenter' in kwargs:
         if (len(kwargs['recenter']) == 2):
@@ -170,7 +176,7 @@ def aplpy_plot(fitsfile, **kwargs):
             fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(__u__.degree).value, height=kwargs['recenter'][2].to(__u__.degree).value)
         else:
             print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
-    
+
     # contours
     if 'contour' in kwargs:
         contournum = 0  # counting variable for number of total contours plotted
@@ -202,13 +208,13 @@ def aplpy_plot(fitsfile, **kwargs):
                     fig._layers['contour_set_'+str(cont_i+1)].clabel()
                 if isinstance(kwargs['clabel'],dict):
                     fig._layers['contour_set_'+str(cont_i+1)].clabel(**kwargs['clabel'])
-    
+
     # regions
     if 'regions' in kwargs:
         # add a test if pyregions is installed
         for reg_i in __np__.arange(len(kwargs['regions'])):
             fig.show_regions(kwargs['regions'][reg_i])
-    
+
     # colorbar settings
     if 'colorbar_location' in kwargs:
         fig.add_colorbar()
@@ -239,7 +245,7 @@ def aplpy_plot(fitsfile, **kwargs):
         fig.beam.set_corner(kwargs['beam_corner'])
         fig.beam.set_frame(ap._beam_frame)
         fig.beam.set_color(ap._beam_color)
-    
+
     # data set overlay
     if 'label_text' in kwargs:
         if isinstance(kwargs['label_text'], str):
@@ -257,7 +263,7 @@ def aplpy_plot(fitsfile, **kwargs):
                 raise ValueError('Need xpos, ypos and string to plot label.')
         else:
             raise TypeError('Unknown type for label_text. Either string or list with three entries are supported.')
-    
+
     if 'overlay' in kwargs:
         for olay in __np__.arange(len(kwargs['overlay'])):
             if (kwargs['overlay'][olay][0] == 'circle'):
@@ -279,7 +285,7 @@ def aplpy_plot(fitsfile, **kwargs):
     fig.ticks.set_color(ap._ticks_color)
     fig.frame.set_color(ap._frame_color)
     fig.axis_labels.set_font(size=ap._tick_label_fontsize)
-    
+
     # add legend
     adjbbox = True
     if 'legend' in kwargs:
@@ -288,15 +294,15 @@ def aplpy_plot(fitsfile, **kwargs):
             fig._ax1.legend(**kwargs['legend_kwargs'])
         else:
             fig._ax1.legend(loc=3, bbox_to_anchor=(0.,1.02,1.,0.1), ncol=2, mode='expand', borderaxespad=0., fontsize=ap._colorbar_fontsize)
-    
+
     # execute additional code passed by the user
     if 'execute_code' in kwargs:
         if (isinstance(kwargs['execute_code'], (list,tuple))):
             for codes in kwargs['execute_code']:
                 exec(codes)
         else:
-            print("Code to execute must be given in a list of strings")
-    
+            print("--> Code to execute must be given in a list of strings")
+
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True, adjust_bbox=adjbbox)
         print("--> saved file as "+kwargs['out'])
