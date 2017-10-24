@@ -143,7 +143,7 @@ def aplpy_plot_slice(fitsfile, slices, **kwargs):
 
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
-        fig = __aplpy__.FITSfigure(fitsfile, slices=[slices], figsize=main_figsize)
+        fig = __aplpy__.FITSFigure(fitsfile, slices=[slices], figsize=main_figsize)
     else:
         fig = __aplpy__.FITSFigure(fitsfile, slices=[slices])
 

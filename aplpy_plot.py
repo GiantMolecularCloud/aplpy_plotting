@@ -144,7 +144,7 @@ def aplpy_plot(fitsfile, **kwargs):
 
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
-        fig = __aplpy__.FITSfigure(fitsfile, figsize=main_figsize)
+        fig = __aplpy__.FITSFigure(fitsfile, figsize=main_figsize)
     else:
         fig = __aplpy__.FITSFigure(fitsfile)
 
