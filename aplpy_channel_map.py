@@ -5,7 +5,7 @@
 # pV diagrams, ... in a quality that (hopefully) allows publishing. #
 #####################################################################
 
-# I know that I shouldn't use dozens of if-else statements but rather try-except to get correct 
+# I know that I shouldn't use dozens of if-else statements but rather try-except to get correct
 # handling of exceptions. When I started wrinting this code I didn't know what exception could
 # do for my case and right now I don't have time to change this script.
 
@@ -28,96 +28,96 @@ __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
 ###################################################################################################
 
 def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
-    
+
     """
     aplpy_channel: channel map plotting function
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    Plot a grid of channel maps, i.e. a regular grid of plots displaying every 
+
+    Plot a grid of channel maps, i.e. a regular grid of plots displaying every
     n-th channel of a three dimensional fits cube.
     Axis labels are plotted on the bottom left panel only. The same applies
-    to beam and scalebar (if given). The last panel always contains a  
+    to beam and scalebar (if given). The last panel always contains a
     horizontal colorbar.
 
     Mandatory unnamed, ordered arguments:
         fitsfile    Path and file name of the fits cube to be plotted. Remove
                     degenerate axes such as the Stokes axis.
-        
+
         ncols       number of columns of the grid
         nrows       number of rows of the grid
-        
+
         chan_start  Channel number of first channel to plot in top left corner.
-        
+
         chan_iter   Plot every chan_iter channel.
-        
+
 
     Optional arguments:
         chan_width  Channel width in km/s.
         chan_velo0  Velocity of first channel in the cube.
-                    These arguments are used to calculate thevelocity of each 
-                    channel map. Will be replaced in the future by the information 
+                    These arguments are used to calculate thevelocity of each
+                    channel map. Will be replaced in the future by the information
                     giben in the fits header but has to be specified manually at
                     the moment.
-    
+
         out         Path and file name of the created plot.
                     If not specified, the plot will be saved where the input image
                     is located. Default format: png
-                    
+
         figsize     Fiugre size as tpuel in inches. Default: (8.27, 11.69) A4 size
-        
+
         cmap        Colormap to plot the image.
                     If not specified, the matplotlib default will be used, usually
                     this is viridis.
-                    Every named matplotlib colormap can be used or any matplotlib 
+                    Every named matplotlib colormap can be used or any matplotlib
                     colormap object.
                     For grayscale use cmap='grayscale'
-                    
+
         vmin        Minimum value for colormap normalization.
         vmax        Maximum value for colormap normalization.
-        
+
         stretch     Colormap strech, e.g. 'linear', 'log', 'sqrt', 'arcsinh'.
                     Linear and log scaling are fully implemented, other scaling can
                     cause errors when unusual argument combinations are chosen.
-        
+
         recenter    Center the image on this location and set image width/height.
                     You either have to specify radius or width and height.
-                    Must be an array containing an astropy.SkyCoord object plus one 
+                    Must be an array containing an astropy.SkyCoord object plus one
                     or two angular distances: [SkyCoord(...), 1*u.arcmin]
-                    
+
         contour     List of contour elements.
                     Each contour element must be a list of mask type, image file, list
-                    of contour levels and list of colors for each contour. The mask 
-                    type can be either 'cubemask' or 'pixelmask'. A cube mask is a fits 
+                    of contour levels and list of colors for each contour. The mask
+                    type can be either 'cubemask' or 'pixelmask'. A cube mask is a fits
                     cube with the channel corresponding to the image channel is plotted
                     as contour, i.e. the contours can be different for each channel.
-                    Pixel mask specifies a single plane image, i.e. the contours are 
-                    identical in each panel. If only one color is given, it will be 
+                    Pixel mask specifies a single plane image, i.e. the contours are
+                    identical in each panel. If only one color is given, it will be
                     used for all contours.
                     Might be replaced be automatic detection if cube or single plane
                     in the future.
                     (It is possible to specifiy maplotlib contour() kwargs as a fifth
                     list element.)
-                    
+
         colorbar_location   As the name says.
                             Can be, e.g. 'bottom', 'right', ...
         colorbar_cmap       The colorbar is generated via matplotlib and thus
                             specified manually at the moment. Make sure you use
                             the same colorbar as in the cmap argument.
-                            Will be updated in a way that cmap is enough and this 
+                            Will be updated in a way that cmap is enough and this
                             argument will be not necessary anymore.
         colorbar_label      Can be specified only when colorbar_location is given.
                             String containing the label.
-                            
-        scalebar_length     As the name says. Must be an angular astropy.units 
+
+        scalebar_length     As the name says. Must be an angular astropy.units
                             object, e.g. 10.0*u.arcmin
-        scalebar_label      String containing the label to be plotted below the 
+        scalebar_label      String containing the label to be plotted below the
                             scalebar.
         scalebar_corner     Where should the scalebar and label be plotted?
                             E.g. 'bottom left'
-        
-        beam_corner Plot a beam ellipse as given in the fits header in this corner 
+
+        beam_corner Plot a beam ellipse as given in the fits header in this corner
                     of the plot. Does not have to be a corner. 'bottom' also works.
-                            
+
         execute_code        This option allows to pass arbitrary code that is executed
                             just before saving the figure and can be used to access
                             aplpy functionality that is not mapped by aplpy_plotting.
@@ -126,11 +126,11 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                             __np__ instead of np. The figure objects are called fig, or
                             main_fig in plots with multiple figures. Example:
                             execute_code = ["fig.show_lines([0,10],[2,5],color='k'"]
-    
-    
+
+
     General style settings
-        Settings that do not have to be changed for each plot but maybe once per 
-        script or once per project. Often used ones are tick_label_xformat, 
+        Settings that do not have to be changed for each plot but maybe once per
+        script or once per project. Often used ones are tick_label_xformat,
         ticks_xspacing and the corresponding settings for y.
             Can be accessed via
         import aplpy_plotting as ap
@@ -140,39 +140,39 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
 
 
     example:
-    
-    aplpy_channel_map(fitscube, 
-                      ncols, 
-                      nrows, 
-                      chan_start, 
-                      chan_iter, 
-                      chan_width=1.0, 
-                      chan_vel0=0.0, 
-                      cmap='jet', 
-                      vmin=-0.05, 
-                      vmax=3.5, 
-                      stretch='linear', 
-                      recenter = [SkyCoord('01h23m45.6s 12d34m45.6s'), 10.0*u.arcsec], 
-                      contour=['pixelmask', 'contour.fits', [1,2,3], ['white', 'grey', 'black']], 
-                      beam_corner='bottom left', 
-                      colorbar_cmap=mpl.cm.jet, 
-                      colorbar_label='flux density [Jy/beam]', 
-                      scalebar_length=1.0, 
-                      scalebar_label='string', 
+
+    aplpy_channel_map(fitscube,
+                      ncols,
+                      nrows,
+                      chan_start,
+                      chan_iter,
+                      chan_width=1.0,
+                      chan_vel0=0.0,
+                      cmap='jet',
+                      vmin=-0.05,
+                      vmax=3.5,
+                      stretch='linear',
+                      recenter = [SkyCoord('01h23m45.6s 12d34m45.6s'), 10.0*u.arcsec],
+                      contour=['pixelmask', 'contour.fits', [1,2,3], ['white', 'grey', 'black']],
+                      beam_corner='bottom left',
+                      colorbar_cmap=mpl.cm.jet,
+                      colorbar_label='flux density [Jy/beam]',
+                      scalebar_length=1.0,
+                      scalebar_label='string',
                       scalebar_corner='bottom',
                       out='cube.png'
                       )
     """
-    
+
     print("--> plotting channel map "+fitscube)
     if not ('chan_width' and 'chan_vel0' in kwargs):
         print("--> channel width and velocity of first channel not given. will not calculate velocity")
-    
+
     if 'figsize' in kwargs:
         main_figsize = kwargs['figsize']
     else:
         main_figsize = (8.27, 11.69)    # A4 in inches
-    
+
     main_fig = __plt__.figure(figsize=main_figsize)
 
     # convert to float for python 2 compatibility
@@ -180,21 +180,21 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
     nrows_f = float(nrows)
 
     for i in __np__.arange(nrows*ncols):
-        
+
         # get subplot specific info
         subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
         #chn_slice   = [chan_start+i*chan_iter,0]   # if 4th axis is present
         chn_slice   = [chan_start+i*chan_iter]  # if no 4th axis available
 
         # introduce a check here to assure that the cube has only three axis (no forth degenerate axis, like Stokes)
-        
+
         if 'chan_width' and 'chan_vel0' in kwargs:
             chn_velo    = (i*chan_iter+chan_start)*kwargs['chan_width']+kwargs['chan_vel0']
-        
+
         # plot channel map if not last panel
         if ( i < nrows*ncols-1 ):
             print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
-            
+
             fig = __aplpy__.FITSFigure(fitscube, figure=main_fig, subplot=subplt_size, dimensions=[0,1], slices=chn_slice)
             if 'vmin' and 'vmax' in kwargs:
                 if 'stretch' in kwargs:
@@ -209,7 +209,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                     fig.show_colorscale(vmin=kwargs['vmax'], vmax=kwargs['vmax'])
             else:
                 fig.show_colorscale()
-            
+
             # recenter image
             if 'recenter' in kwargs:
                 if (len(kwargs['recenter']) == 2):
@@ -218,7 +218,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                     fig.recenter(kwargs['recenter'][0].ra.degree, kwargs['recenter'][0].dec.degree, width=kwargs['recenter'][1].to(__u__.degree).value, height=kwargs['recenter'][2].to(__u__.degree).value)
                 else:
                     print("--> specify SkyCoord(x,y) and either radius or width, height. not recentering")
-            
+
             # contours?
             if 'contour' in kwargs:
                 if len(kwargs['contour']) == 4:
@@ -235,8 +235,8 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                         fig.show_contour(data=kwargs['contour'][1], dimensions=[0,1], slices=chn_slice, levels=kwargs['contour'][2], colors=kwargs['contour'][3], **kwargs['contour'][4])
                 else:
                     print("--> wrong number or format of contour parameters. not plotting contours")
-            
-            
+
+
             # ticks + labels
             fig.axis_labels.hide()
             fig.tick_labels.hide()
@@ -246,13 +246,13 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
             fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
             fig.ticks.set_color(ap._ticks_color)
             fig.frame.set_color(ap._frame_color)
-            
+
             # velocity or channel number overlay
             if 'chan_width' and 'chan_vel0' in kwargs:
                 fig.add_label(0.8, 0.8, str('{:3.1f}'.format(chn_velo))+r'\,km\,s$^{-1}$', color='black', relative=True, size=ap._velo_fontsize)
             else:
                 fig.add_label(0.8, 0.8, 'channel '+str(chn_slice), color='black', relative=True, size=ap._velo_fontsize)
-            
+
             # beam settings
             if 'beam_corner' in kwargs:
                 fig.add_beam()
@@ -260,7 +260,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                 fig.beam.set_corner(kwargs['beam_corner'])
                 fig.beam.set_frame(ap._beam_frame)
                 fig.beam.set_color(ap._beam_color)
-            
+
         # colorbar settings
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
@@ -290,7 +290,7 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                     #colorbar.dividers.set_color(ap._frame_color)
             else:
                 print("--> you need to specify colorbar_cmap and colorbar_label to plot a colorbar")
-            
+
         # add axis label and scale bar if bottom left plot
         if ( i == (nrows-1)*ncols ):
             fig.axis_labels.show()
@@ -312,15 +312,26 @@ def aplpy_channel_map(fitscube, ncols, nrows, chan_start, chan_iter, **kwargs):
                 fig.scalebar.set_linestyle(ap._scalebar_linestyle)
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
                 fig.scalebar.set_color(ap._scalebar_color)
-    
+
+    # # execute additional code passed by the user
+    # if 'execute_code' in kwargs:
+    #     if (isinstance(kwargs['execute_code'], (list,tuple))):
+    #         for codes in kwargs['execute_code']:
+    #             exec(codes)
+    #     else:
+    #         print("Code to execute must be given in a list of strings")
+
     # execute additional code passed by the user
     if 'execute_code' in kwargs:
         if (isinstance(kwargs['execute_code'], (list,tuple))):
-            for codes in kwargs['execute_code']:
-                exec(codes)
+            if (len(kwargs['execute_code']) == len(fitsimages)):
+                for codes in kwargs['execute_code'][i]:
+                    exec(codes)
+            else:
+                print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
         else:
-            print("Code to execute must be given in a list of strings")
-    
+            print("Code to execute must be given in a list of list of strings")
+
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
         print("--> saved file as "+kwargs['out'])

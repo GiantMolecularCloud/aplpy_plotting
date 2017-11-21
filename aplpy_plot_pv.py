@@ -201,6 +201,8 @@ def aplpy_plot_pv(fitspv, **kwargs):
     fig.tick_labels.show()
     fig.ticks.show()
     fig.ticks.set_minor_frequency(ap.ticks_minor_frequency)
+    fig.tick_labels.set_font(size=ap._tick_label_fontsize)
+    fig.axis_labels.set_font(size=ap._tick_label_fontsize)
     fig.ticks.set_color(ap._ticks_color)
     fig.frame.set_color(ap._frame_color)
 

@@ -183,26 +183,26 @@ def aplpy_plot(fitsfile, **kwargs):
         for cont_i in __np__.arange(len(kwargs['contour'])):
             if len(kwargs['contour'][cont_i]) == 3:
                 fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
-                if 'legend' in kwargs:
-                    if (kwargs['legend'] == True):
-                        fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
-                    elif (isinstance(kwargs['legend'], (list,tuple))):
-                        fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
-                    else:
-                        print("--> wrong format for legend: either True or list of names for each contour.")
-                    contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
             elif len(kwargs['contour'][cont_i]) == 4:
-                fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3])
-                if 'legend' in kwargs:
-                    if (kwargs['legend'] == True):
-                        fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
-                    elif (isinstance(kwargs['legend'], (list,tuple))):
-                        fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
-                    else:
-                        print("--> wrong format for legend: either True or list of names for each contour.")
-                    contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
+                # two options when four arguments are given: slice argument (int) as second or kwargs (dict) as last element
+                if type(kwargs['contour'][cont_i][1]) is int:
+                    fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3])
+                elif type(kwargs['contour'][cont_i][3]) is dict:
+                    fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2], **kwargs['contour'][cont_i][3])
+                else:
+                    print("--> Contour list: could not interpret list.")
+            elif len(kwargs['contour'][cont_i]) == 5:
+                fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3], **kwargs['contour'][4])
             else:
                 print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
+            if 'legend' in kwargs:
+                if (kwargs['legend'] == True):
+                    fig._ax1.collections[contournum].set_label(kwargs['contour'][cont_i][0].replace('_','$\_$'))
+                elif (isinstance(kwargs['legend'], (list,tuple))):
+                    fig._ax1.collections[contournum].set_label(kwargs['legend'][cont_i])
+                else:
+                    print("--> wrong format for legend: either True or list of names for each contour.")
+                contournum += len(kwargs['contour'][cont_i][1])     # count up plotted contours
             if 'clabel' in kwargs:
                 if kwargs['clabel'] == True:
                     fig._layers['contour_set_'+str(cont_i+1)].clabel()
