@@ -240,11 +240,11 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
 
             # data set overlay
             if 'label_text' in kwargs:
-                fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+                fig.add_label(0.1, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
                 if 'label_kwargs' in kwargs:
-                    fig.add_label(0.5, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
+                    fig.add_label(0.1, 0.9, kwargs['label_text'][i].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize, **kwargs['label_kwargs'])
             else:
-                fig.add_label(0.5, 0.9, fitsimages[i][:-5].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
+                fig.add_label(0.1, 0.9, fitsimages[i][:-5].replace('_','$\_$'), color='black', relative=True, size=ap._velo_fontsize)
 
             if 'overlay' in kwargs:
                 for olay in __np__.arange(len(kwargs['overlay'])):
