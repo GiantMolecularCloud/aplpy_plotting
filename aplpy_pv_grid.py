@@ -290,7 +290,7 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
     if 'colorbar_cmap' and 'colorbar_label' in kwargs:
         i = ncols*nrows-1
         print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-        ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
+        ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
 
         if 'stretch' in kwargs:
             if (kwargs['stretch'] == 'linear'):
