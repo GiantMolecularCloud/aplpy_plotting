@@ -275,6 +275,17 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
                 fig.scalebar.set_color(ap._scalebar_color)
 
+        # execute additional code passed by the user
+        if 'execute_code' in kwargs:
+            if (isinstance(kwargs['execute_code'], (list,tuple))):
+                if (len(kwargs['execute_code']) == len(fitsimages)):
+                    for codes in kwargs['execute_code'][i]:
+                        exec(codes)
+                else:
+                    print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
+            else:
+                print("Code to execute must be given in a list of list of strings")
+
     # colorbar settings
     if 'colorbar_cmap' and 'colorbar_label' in kwargs:
         i = ncols*nrows-1
@@ -305,16 +316,6 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
     else:
         print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
 
-        # execute additional code passed by the user
-        if 'execute_code' in kwargs:
-            if (isinstance(kwargs['execute_code'], (list,tuple))):
-                if (len(kwargs['execute_code']) == len(fitsimages)):
-                    for codes in kwargs['execute_code'][i]:
-                        exec(codes)
-                else:
-                    print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
-            else:
-                print("Code to execute must be given in a list of list of strings")
 
     if 'execute_once' in kwargs:
         if (isinstance(kwargs['execute_once'], (list,tuple))):
