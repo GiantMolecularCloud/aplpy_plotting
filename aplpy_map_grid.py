@@ -176,7 +176,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
     ncols_f = float(ncols)
     nrows_f = float(nrows)
 
-    for i in __np__.arange(nrows*ncols):
+    for i in __np__.arange(len(fitsimages)):
 
         # get subplot specific info
         subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
@@ -278,22 +278,23 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 fig.scalebar.set_color(ap._scalebar_color)
 
         # colorbar settings
-        if 'colorbar_cmap' and 'colorbar_label' in kwargs:
-            print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-            ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
-            if 'vmin' and 'vmax' in kwargs:
-                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
-                colorbar.outline.set_edgecolor(ap._frame_color)
-                colorbar.dividers.set_color(ap._frame_color)
-            else:
-                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
-            colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
-            colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
-            colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
+    if 'colorbar_cmap' and 'colorbar_label' in kwargs:
+        i = ncols*nrows-1
+        print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
+        ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
+        if 'vmin' and 'vmax' in kwargs:
+            colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
             colorbar.outline.set_edgecolor(ap._frame_color)
-#            colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
+            colorbar.dividers.set_color(ap._frame_color)
         else:
-            print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
+            colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
+        colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
+        colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
+        colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
+        colorbar.outline.set_edgecolor(ap._frame_color)
+#        colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
+    else:
+        print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
 
     # execute additional code passed by the user
     if 'execute_code' in kwargs:
