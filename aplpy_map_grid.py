@@ -176,7 +176,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
     ncols_f = float(ncols)
     nrows_f = float(nrows)
 
-    for i in __np__.arange(len(fitsimages)):
+    for i in __np__.arange(nrows*ncols):
 
         # get subplot specific info
         subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
