@@ -131,6 +131,10 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
                             figure objects are called fig, or main_fig in plots with
                             multiple figures. Example:
                             execute_code = [["fig.show_lines([0,10],[2,5],color='k'"]]
+        execute_once        Execute arbitrary code passed as list of strings. This is
+                            executed just once before saving the figure. The intended
+                            use is to create a single legend for all the panels. The
+                            same comments as in execute_code apply.
 
     General style settings
         Settings that do not have to be changed for each plot but maybe once per
@@ -191,7 +195,7 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
         if ( i < nrows*ncols-1 ):
             print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
 
-# add option to use single vmin/vmax or list (one for each panel)
+            # add option to use single vmin/vmax or list (one for each panel)
             fig = __aplpy__.FITSFigure(fitsimages[i], figure=main_fig, subplot=subplt_size)
             if 'vmin' and 'vmax' in kwargs:
                 if 'stretch' in kwargs:
@@ -274,8 +278,8 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
         # colorbar settings
         if (i == ncols*nrows-1):
             if 'colorbar_cmap' and 'colorbar_label' in kwargs:
+                print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
                 ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05+0.5*0.9/nrows_f, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
-
 
                 if 'stretch' in kwargs:
                     print(kwargs['stretch'])
@@ -311,6 +315,13 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
                     print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
             else:
                 print("Code to execute must be given in a list of list of strings")
+
+    if 'execute_once' in kwargs:
+        if (isinstance(kwargs['execute_once'], (list,tuple))):
+            for code in kwargs['execute_once']:
+                exec(code)
+        else:
+            print("Please give a list of commands to execute.")
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
