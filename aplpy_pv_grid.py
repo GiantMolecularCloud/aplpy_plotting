@@ -315,7 +315,7 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
     else:
         print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
 
-
+    # code to be executed just once instead of after every panel
     if 'execute_once' in kwargs:
         if (isinstance(kwargs['execute_once'], (list,tuple))):
             for code in kwargs['execute_once']:
