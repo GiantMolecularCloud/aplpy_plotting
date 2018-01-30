@@ -1,7 +1,35 @@
 # aplpy_plotting
-repo for some wrapper functions to make plotting with APLpy more convenient
+Repo for some wrapper functions to make plotting with APLpy more convenient
 
 for APLpy see https://github.com/aplpy/aplpy
+
+## available wrappers:
+
+### simple map plotting `ap.aplpy_plot`
+This is a one-liner to quickly plot a fits file that consists of only on channel/plane. It just needs the name of a fits file to render a figure without having to setup the aplpy figure using several lines of code. Further options are available to customize the plot.
+
+### simple channel plotting `ap.aply_plot_slice`
+Basically the same as `ap.aplpy_plot` but for image cube with multiple channels. Beside the name of the file to plot, it also needs the number of the channel that should be plotted. The color bar will always be plotted in the last (bottom right) panel, axis labels always in the bottom left panel. This may cause the labels to be missing when to few panels are plotted (e.g. 6 channels in a 3x3 grid).
+
+### channel map `ap.aplpy_channel_map`
+Wrapper to plot "channel maps": a grid of plots showing a selection of channels of an image cube. File name, number of rows and columns, first channel to plot and step width need to be given. Further options allow customisation.
+
+### map grid `ap.aplpy_map_grid`
+Plot a list of single plane fits file in a grid. Rerquires a list of file names and number of rows/columns.
+
+### position-velocity diagram `ap.aply_plot_pv`
+Position velocity diagrams slice a 3D image cube along the spectral axis and are sort of a spectrum along a line instead of just a single pixel. This functions sets up the figure correctly, so aplpy can understand that one axis of the image is not spatial but a spectral quantity. Needs just a file name to render a plot.
+
+### position-velocity grid
+A combination of "map grid" and "pv diagram": Plot a grid of multiple pV diagrams side-by-side to allow direct comparison. Requires a list of file names and number of columns/rows to plot.
+
+## Plot customisartion
+These wrappers were originally written to simplify my plotting scripts to contain only functions with a handful of arguments instead of hundreds of lines of aplpy code. They may not do exactly what you want to do, so please point out bugs or where functionality is missing.
+
+Each function offers the most often used customisation options directly through arguments. For details see the inline help that can be called using a `?`, e.g. `?ap.aplpy_plot`.
+
+Beside the options that are directly available through arguments, most functions also contain a `execute_code` argument. Strings passed to `execute_code` will be executed within the wrapper function which allows you to directly reach the figure's internals like the figure object or even the underlying matplotlib objects. Through this argument you can modify the figure in any way but still keep your plotting code contained within one relatively short function.
+Be careful with this argument. You may crash the wrapper function by redefining objects.
 
 
 ## Installation:
