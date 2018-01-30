@@ -4,8 +4,23 @@ repo for some wrapper functions to make plotting with APLpy more convenient
 for APLpy see https://github.com/aplpy/aplpy
 
 
+## Installation:
+- clone this repository or download the scripts
+- add the path where the file are located to your python path
+    ```
+    import sys
+    sys.path.append('/your/path/to/aplpy_plotting')
+    ```
+- import the wrapper functions
+    ```
+    import aplpy_plotting as ap
+    ```
+- call the plotting wrappers with `ap.xxxxx`
+
 ## known issues:
 - not all possible combinations of keyword arguments work (e.g. giving just vmin and vmax but not cmap).
+- channel maps: first channel to plot and step need to be given as channel number, giving velocity or frequency is not supported yet.
+- The functions sometimes offer more parameters than listed in the inline help (`?ap.aplpy_channel_map`). These are options that I introduced for specific plots but didn't have the time yet to update the docstring.
 
 ## some examples:
 
