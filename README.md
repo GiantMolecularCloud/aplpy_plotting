@@ -20,7 +20,7 @@ Plot a list of single plane fits file in a grid. Rerquires a list of file names 
 ### position-velocity diagram `ap.aply_plot_pv`
 Position velocity diagrams slice a 3D image cube along the spectral axis and are sort of a spectrum along a line instead of just a single pixel. This functions sets up the figure correctly, so aplpy can understand that one axis of the image is not spatial but a spectral quantity. Needs just a file name to render a plot.
 
-### position-velocity grid
+### position-velocity grid `ap.aply_pv_grid`
 A combination of "map grid" and "pv diagram": Plot a grid of multiple pV diagrams side-by-side to allow direct comparison. Requires a list of file names and number of columns/rows to plot.
 
 ## Plot customisartion
