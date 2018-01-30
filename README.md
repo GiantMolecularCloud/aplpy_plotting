@@ -46,8 +46,9 @@ Be careful with this argument. You may crash the wrapper function by redefining 
 - call the plotting wrappers with `ap.xxxxx`
 
 ## known issues:
-- not all possible combinations of keyword arguments work (e.g. giving just vmin and vmax but not cmap).
-- channel maps: first channel to plot and step need to be given as channel number, giving velocity or frequency is not supported yet.
+- Not all possible combinations of keyword arguments work (e.g. giving just vmin and vmax but not cmap).
+- Channel maps: first channel to plot and step need to be given as channel number, giving velocity or frequency is not supported yet.
+- Channel map and map grids: color map has to be given twice. Once for using the correct one while plotting the panels and once again to draw the color bar in the last panel. Will be fixed soon!
 - The functions sometimes offer more parameters than listed in the inline help (`?ap.aplpy_channel_map`). These are options that I introduced for specific plots but didn't have the time yet to update the docstring.
 
 ## some examples:
