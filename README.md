@@ -9,10 +9,11 @@ for APLpy see https://github.com/aplpy/aplpy
 This is a one-liner to quickly plot a fits file that consists of only on channel/plane. It just needs the name of a fits file to render a figure without having to setup the aplpy figure using several lines of code. Further options are available to customize the plot.
 
 ### simple channel plotting `ap.aply_plot_slice`
-Basically the same as `ap.aplpy_plot` but for image cube with multiple channels. Beside the name of the file to plot, it also needs the number of the channel that should be plotted. The color bar will always be plotted in the last (bottom right) panel, axis labels always in the bottom left panel. This may cause the labels to be missing when to few panels are plotted (e.g. 6 channels in a 3x3 grid).
+Basically the same as `ap.aplpy_plot` but for image cube with multiple channels. Beside the name of the file to plot, it also needs the number of the channel that should be plotted.
 
 ### channel map `ap.aplpy_channel_map`
 Wrapper to plot "channel maps": a grid of plots showing a selection of channels of an image cube. File name, number of rows and columns, first channel to plot and step width need to be given. Further options allow customisation.
+The color bar will always be plotted in the last (bottom right) panel, axis labels always in the bottom left panel. This may cause the labels to be missing when to few panels are plotted (e.g. 6 channels in a 3x3 grid).
 
 ### map grid `ap.aplpy_map_grid`
 Plot a list of single plane fits file in a grid. Rerquires a list of file names and number of rows/columns.
