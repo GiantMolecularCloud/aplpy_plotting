@@ -19,9 +19,12 @@ import numpy as __np__
 from astropy import units as __u__
 from matplotlib import rc as __rc__
 __rc__('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
-import warnings as __warnings__
-__warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+try:
+    from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+    import warnings as __warnings__
+    __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+except:
+    pass
 
 ###################################################################################################
 

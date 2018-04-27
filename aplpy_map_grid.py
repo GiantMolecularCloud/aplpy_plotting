@@ -20,9 +20,12 @@ import matplotlib as __mpl__
 import matplotlib.pyplot as __plt__
 from matplotlib import rc as __rc__
 __rc__('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
-import warnings as __warnings__
-__warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+try:
+    from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+    import warnings as __warnings__
+    __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+except:
+    pass
 
 ###################################################################################################
 
@@ -214,13 +217,12 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
 
             # contours?
             if 'contour' in kwargs:
-                for cont_i in __np__.arange(len(kwargs['contour'])):
-                    if len(kwargs['contour'][cont_i]) == 3:
-                        fig.show_contour(data=kwargs['contour'][cont_i][0], levels=kwargs['contour'][cont_i][1], colors=kwargs['contour'][cont_i][2])
-                    if len(kwargs['contour'][cont_i]) == 4:
-                        fig.show_contour(data=kwargs['contour'][cont_i][0], slices=[kwargs['contour'][cont_i][1]], levels=kwargs['contour'][cont_i][2], colors=kwargs['contour'][cont_i][3])
-                    else:
-                        print("--> wrong number or format of contour parameters in image "+str(cont_i)+". not plotting contours")
+                if len(kwargs['contour'][i]) == 3:
+                    fig.show_contour(data=kwargs['contour'][i][0], levels=kwargs['contour'][i][1], colors=kwargs['contour'][i][2])
+                elif len(kwargs['contour'][i]) == 4:
+                    fig.show_contour(data=kwargs['contour'][i][0], slices=[kwargs['contour'][i][1]], levels=kwargs['contour'][i][2], colors=kwargs['contour'][i][3])
+                else:
+                    print("--> wrong number or format of contour parameters in image "+str(i)+". not plotting contours")
 
             # ticks + labels
             fig.axis_labels.hide()
@@ -277,6 +279,17 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
                 fig.scalebar.set_linewidth(ap._scalebar_linewidth)
                 fig.scalebar.set_color(ap._scalebar_color)
 
+        # execute additional code passed by the user
+        if 'execute_code' in kwargs:
+            if (isinstance(kwargs['execute_code'], (list,tuple))):
+                if (len(kwargs['execute_code']) == len(fitsimages)):
+                    for codes in kwargs['execute_code'][i]:
+                        exec(codes)
+                else:
+                    print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
+            else:
+                print("Code to execute must be given in a list of list of strings")
+
         # colorbar settings
     if 'colorbar_cmap' and 'colorbar_label' in kwargs:
         i = ncols*nrows-1
@@ -285,7 +298,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         if 'vmin' and 'vmax' in kwargs:
             colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
             colorbar.outline.set_edgecolor(ap._frame_color)
-            colorbar.dividers.set_color(ap._frame_color)
+            #colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
         else:
             colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
         colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
@@ -296,13 +309,12 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
     else:
         print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
 
-    # execute additional code passed by the user
-    if 'execute_code' in kwargs:
-        if (isinstance(kwargs['execute_code'], (list,tuple))):
-            for codes in kwargs['execute_code']:
-                exec(codes)
+    if 'execute_once' in kwargs:
+        if (isinstance(kwargs['execute_once'], (list,tuple))):
+            for code in kwargs['execute_once']:
+                exec(code)
         else:
-            print("Code to execute must be given in a list of strings")
+            print("Please give a list of commands to execute.")
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)

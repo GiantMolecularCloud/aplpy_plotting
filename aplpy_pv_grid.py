@@ -20,9 +20,12 @@ import matplotlib as __mpl__
 import matplotlib.pyplot as __plt__
 from matplotlib import rc as __rc__
 __rc__('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
-import warnings as __warnings__
-__warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+try:
+    from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+    import warnings as __warnings__
+    __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+except:
+    pass
 
 ###################################################################################################
 
@@ -191,8 +194,13 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
         # get subplot specific info
         subplt_size = [0.05+(i%ncols_f)*0.9/ncols_f, 0.95-__np__.ceil((i+1)/ncols_f)*0.9/nrows_f, 0.9/ncols_f, 0.9/nrows_f]
 
-        # plot channel map if not last panel
-        if ( i < nrows*ncols-1 ):
+        # plot channel map if not last panel / alos plot last panel if colorbar right
+        if ('colorbar_location' in kwargs) and (kwargs['colorbar_location'] == 'right') :
+            plot_to = nrows*ncols
+        else:
+            plot_to = nrows*ncols-1
+
+        if ( i < plot_to ):
             print("--> panel "+str(i+1)+" of "+str(nrows*ncols))
 
             # add option to use single vmin/vmax or list (one for each panel)
@@ -210,6 +218,15 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
                     fig.show_colorscale(vmin=kwargs['vmax'], vmax=kwargs['vmax'], aspect='auto')
             else:
                 fig.show_colorscale(aspect='auto')
+
+            # disable map when only contours should be plotted
+            if 'hide_map' in kwargs:
+                if (kwargs['hide_map'] == True):
+                    if 'cmap' in kwargs:
+                        if kwargs['cmap'] == 'grayscale':
+                            fig.hide_grayscale()
+                        else:
+                            fig.hide_colorscale()
 
             # force subfigure to be only as wide as the image
 #           fig.image.axes.set_adjustable('box-forced')
@@ -287,33 +304,58 @@ def aplpy_pv_grid(fitsimages, ncols, nrows, **kwargs):
                 print("Code to execute must be given in a list of list of strings")
 
     # colorbar settings
-    if 'colorbar_cmap' and 'colorbar_label' in kwargs:
-        i = ncols*nrows-1
-        print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
-        ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
-
-        if 'stretch' in kwargs:
-            if (kwargs['stretch'] == 'linear'):
-                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
-            elif (kwargs['stretch'] == 'log'):
-                log_ticks = [float('{:.2f}'.format(x)) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=5, endpoint=True)]
-                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='horizontal')
-                colorbar.set_label(kwargs['colorbar_label'])
-                colorbar.set_ticks(log_ticks)
-                colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
-                colorbar.outline.set_edgecolor(ap._frame_color)
-                #colorbar.dividers.set_color(ap._frame_color)
+    if 'colorbar_location' in kwargs:
+        if kwargs['colorbar_location'] == 'right':
+            ax1 = main_fig.add_axes([0.95, 0.05, ap._colorbar_width*0.9/nrows_f, 0.9/nrows_f])
+            if 'stretch' in kwargs:
+                if (kwargs['stretch'] == 'linear'):
+                    colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='vertical')
+                elif (kwargs['stretch'] == 'log'):
+                    log_ticks = [float('{:.2f}'.format(x)) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=5, endpoint=True)]
+                    colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='vertical')
+                    colorbar.set_label(kwargs['colorbar_label'])
+                    colorbar.set_ticks(log_ticks)
+                    colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
+                    colorbar.outline.set_edgecolor(ap._frame_color)
+                    #colorbar.dividers.set_color(ap._frame_color)
+                else:
+                    print("--> only linear and log stretch supported!")
             else:
-                print("--> only linear and log stretch supported!")
-        else:
-            colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
-        colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
-        colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
-        #colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
-        colorbar.outline.set_edgecolor(ap._frame_color)
-        #colorbar.dividers.set_color(ap._frame_color)       # possibly broken in mpl 2.0.0
+                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+            colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
+            colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
+            #colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
+            colorbar.outline.set_edgecolor(ap._frame_color)
+            #colorbar.dividers.set_color(ap._frame_color)       # possibly broken in mpl 2.0.0
+
     else:
-        print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
+        if 'colorbar_cmap' and 'colorbar_label' in kwargs:
+            i = ncols*nrows-1
+            print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
+            ax1 = main_fig.add_axes([0.05+(ncols_f-1+0.05)*0.9/ncols_f, 0.05, 0.9*0.9/ncols_f, ap._colorbar_width*0.9/nrows_f])
+
+            if 'stretch' in kwargs:
+                if (kwargs['stretch'] == 'linear'):
+                    colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+                elif (kwargs['stretch'] == 'log'):
+                    log_ticks = [float('{:.2f}'.format(x)) for x in __np__.logspace(__np__.log10(kwargs['vmin']),__np__.log10(kwargs['vmax']),num=5, endpoint=True)]
+                    colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.LogNorm(vmin=kwargs['vmin'], vmax=kwargs['vmax']), ticks=log_ticks, orientation='horizontal')
+                    colorbar.set_label(kwargs['colorbar_label'])
+                    colorbar.set_ticks(log_ticks)
+                    colorbar.set_ticklabels(['{:.2f}'.format(x) for x in log_ticks])
+                    colorbar.outline.set_edgecolor(ap._frame_color)
+                    #colorbar.dividers.set_color(ap._frame_color)
+                else:
+                    print("--> only linear and log stretch supported!")
+            else:
+                colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
+            colorbar.set_label(kwargs['colorbar_label'], size = ap._colorbar_fontsize)
+            colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
+            #colorbar.ax.set_xticklabels([item.get_text() for item in colorbar.ax.get_xticklabels()], rotation=90)
+            colorbar.outline.set_edgecolor(ap._frame_color)
+            #colorbar.dividers.set_color(ap._frame_color)       # possibly broken in mpl 2.0.0
+        else:
+            print("--> you need to define colorbar_cmap and colorbar_label to plot a colorbar")
 
 
     if 'execute_once' in kwargs:
