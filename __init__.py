@@ -21,17 +21,21 @@ import matplotlib.colors as __colors__
 import matplotlib.pyplot as __plt__
 from matplotlib import rc as __rc__
 __rc__('text',usetex=True)
-from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
-import warnings as __warnings__
-__warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+
+try:
+    from matplotlib.cbook import MatplotlibDeprecationWarning as __MatplotlibDeprecationWarning__
+    import warnings as __warnings__
+    __warnings__.simplefilter('ignore', __MatplotlibDeprecationWarning__)
+except:
+    print("aplpy_plotting: Could not turn of MatplotlibDeprecationWarning")
 
 ###################################################################################################
 
 # General style settings
 ########################
 
-# This is defined here to ensure consistency of the output over subsequent calls, i.e. I want my 
-# plots to look the same. Some things must be adapted to the dataset and should thus be changeable 
+# This is defined here to ensure consistency of the output over subsequent calls, i.e. I want my
+# plots to look the same. Some things must be adapted to the dataset and should thus be changeable
 # before calling the plot function. Global variables do exactly that.
 
 # settings that are dataset dependend, i.e. need to be changed for a new dataset
@@ -63,7 +67,10 @@ _props                 = {'boxstyle': "round", 'facecolor': "w", 'edgecolor': "b
 
 
 # define new viridis colormap with less dark blue
-viridis_cropped = __colors__.ListedColormap(__mpl__.cm.viridis(__np__.linspace(0.1,1.0,100)))
+try:
+    viridis_cropped = __colors__.ListedColormap(__mpl__.cm.viridis(__np__.linspace(0.1,1.0,100)))
+except:
+    print("aplpy_plotting: could not define custom colormap")
 
 
 ###################################################################################################
@@ -73,6 +80,7 @@ from .aplpy_plot import aplpy_plot
 from .aplpy_plot_pv import aplpy_plot_pv
 from .aplpy_channel_map import aplpy_channel_map
 from .aplpy_map_grid import aplpy_map_grid
+from .aplpy_moments_grid import aplpy_moments_grid
 from .aplpy_plot_slice import aplpy_plot_slice
 from .aplpy_pv_grid import aplpy_pv_grid
 from .correct_velo_info import correct_velo_info
