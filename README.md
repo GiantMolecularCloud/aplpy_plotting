@@ -3,10 +3,12 @@ Repo for some wrapper functions to make plotting with APLpy more convenient
 
 for APLpy see https://github.com/aplpy/aplpy
 
+
 ---
 This package was competely rewritten to be easier to understand and maintain.
 Check out easy_aplpy to bake your ~~pies~~ plots: ![easy_aplpy](https://github.com/GiantMolecularCloud/easy_aplpy)
 ---
+
 
 ## available wrappers:
 
