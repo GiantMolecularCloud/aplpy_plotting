@@ -290,11 +290,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
             else:
                 print("Code to execute must be given in a list of list of strings")
 
-<<<<<<< HEAD
     # colorbar settings
-=======
-        # colorbar settings
->>>>>>> origin/master
     if 'colorbar_cmap' and 'colorbar_label' in kwargs:
         i = ncols*nrows-1
         print("--> panel "+str(i+1)+" of "+str(ncols*nrows)+": colorbar")
@@ -302,11 +298,7 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
         if 'vmin' and 'vmax' in kwargs:
             colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax']), orientation='horizontal')
             colorbar.outline.set_edgecolor(ap._frame_color)
-<<<<<<< HEAD
-#            colorbar.dividers.set_color(ap._frame_color)
-=======
             #colorbar.dividers.set_color(ap._frame_color)        # possibly broken in mpl 2.0.0
->>>>>>> origin/master
         else:
             colorbar = __mpl__.colorbar.ColorbarBase(ax1, cmap=kwargs['colorbar_cmap'], norm=__mpl__.colors.Normalize(vmin=0.0, vmax=1.0), orientation='horizontal')
         colorbar.ax.tick_params(labelsize = ap._colorbar_fontsize)
@@ -317,20 +309,13 @@ def aplpy_map_grid(fitsimages, ncols, nrows, **kwargs):
     else:
         print("--> you need to define both colorbar_location and colorbar_label to plot a colorbar")
 
-<<<<<<< HEAD
     # code to be executed just once instead of after every panel
-=======
->>>>>>> origin/master
     if 'execute_once' in kwargs:
         if (isinstance(kwargs['execute_once'], (list,tuple))):
             for code in kwargs['execute_once']:
                 exec(code)
         else:
             print("Please give a list of commands to execute.")
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 
     if 'out' in kwargs:
         fig.save(kwargs['out'], dpi=300, transparent=True)
