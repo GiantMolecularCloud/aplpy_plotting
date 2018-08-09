@@ -177,6 +177,17 @@ def aplpy_moments_grid(fitsimages, scaling, **kwargs):
                     fig.scalebar.set_linewidth(ap._scalebar_linewidth)
                     fig.scalebar.set_color(ap._scalebar_color)
 
+            # execute additional code passed by the user
+            if 'execute_code' in kwargs:
+                if (isinstance(kwargs['execute_code'], (list,tuple))):
+                    if (len(kwargs['execute_code']) == len(fitsimages)):
+                        for codes in kwargs['execute_code'][i]:
+                            exec(codes)
+                    else:
+                        print("Please give exactly one list element for each panel. Can also be empty or list of multiple commands.")
+                else:
+                    print("Code to execute must be given in a list of list of strings")
+
     __mpl__.pyplot.subplots_adjust(wspace=0.001, hspace=0.001)
 #    __mpl__.pyplot.tight_layout()
     fig.save(out, dpi=300, transparent=True)
